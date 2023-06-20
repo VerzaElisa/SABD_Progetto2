@@ -1,2 +1,3 @@
-./producer.log
-./reset.sh
+producer.log
+reset.sh
+apache-flink*.tar.gz
