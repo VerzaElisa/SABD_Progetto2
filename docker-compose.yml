@@ -31,12 +31,15 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
 
   jobmanager:
-    image: flink:latest
+    build: 
+      context: .
+      dockerfile: ./DockerFile/Flink/Dockerfile
     ports:
       - "8081:8081"
     command: jobmanager
     volumes:
-       - ./FlinkScripts:/opt/filnk-apps
+       - ./FlinkScripts:/opt/flink-apps
+       - ./DockerFile/Flink:/
     environment:
       - |
         FLINK_PROPERTIES=
