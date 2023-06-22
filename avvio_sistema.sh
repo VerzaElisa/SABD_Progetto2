@@ -17,7 +17,7 @@ else
 fi
 docker build --tag pyflink:latest .
 cd ../../FlinkScripts
-ls -l $name > /dev/null
+ls -l $nameSql > /dev/null
  
 if [ "$?" -eq "0" ]
 then
