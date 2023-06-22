@@ -1,5 +1,6 @@
 #! /bin/bash
 name="apache-flink*.tar.gz"
+nameSql="flink-sql-connector-kafka-1.17.1.jar"
 
 docker compose down
 
@@ -16,7 +17,15 @@ else
 fi
 docker build --tag pyflink:latest .
 cd ../../FlinkScripts
-wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/1.17.1/flink-sql-connector-kafka-1.17.1.jar
+ls -l $name > /dev/null
+ 
+if [ "$?" -eq "0" ]
+then
+     echo "File già esistente"
+else
+     echo "Download file sql"
+     wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/1.17.1/flink-sql-connector-kafka-1.17.1.jar
+fi
 cd ..
 docker compose build
 docker compose up -d
