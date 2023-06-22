@@ -1,3 +1,4 @@
 producer.log
 reset.sh
 apache-flink*.tar.gz
+/FlinkScripts/flink-sql-connector-kafka-1.17.1.jar

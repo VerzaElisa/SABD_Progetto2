@@ -22,7 +22,7 @@ def kafkaread():
     kafkaSource = FlinkKafkaConsumer(
         topics='user-tracker',
         deserialization_schema=deserialization_schema,
-        properties={'bootstrap.servers': 'kafka:9092', 'group.id': 'test'}
+        properties={'bootstrap.servers': 'kafka:29092', 'group.id': 'test'}
     )
 
     ds = env.add_source(kafkaSource).print()
