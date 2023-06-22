@@ -14,6 +14,7 @@ services:
     container_name: broker
     depends_on:
       - zookeeper
+    hostname: kafka
     ports:
       - "29092:29092"
       - "9092:9092"
@@ -39,12 +40,11 @@ services:
     command: jobmanager
     volumes:
        - ./FlinkScripts:/opt/flink-apps
-       - ./DockerFile/Flink:/
+       - ./DockerFile/Flink:/data
     environment:
       - |
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager        
-
   taskmanager:
     image: flink:latest
     depends_on:
@@ -56,3 +56,7 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2      
+networks:
+  main_network:
+    name: main_network
+    driver: bridge
