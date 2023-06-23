@@ -1,11 +1,12 @@
+import csv
+import time
 from confluent_kafka import Producer
 from faker import Faker
-import json
-import time
+from datetime import datetime
 import logging
-import random
 import pandas as pd
 import numpy as np
+
 
 fake=Faker()
 
@@ -30,35 +31,34 @@ def receipt(err,msg):
         print(message)
         
 #####################
+
 def main():
-    data=pd.read_csv(filepath_or_buffer="../../out500_combined+header.csv",skiprows=[0,1,2,3,4,5,6,7,8,9,10,11,12],low_memory=False,header=None)
-    print(data)
-    data2=data.sort_values(by=['Date','Time'])
-    data2["Date"]=data2["Date"].astype(str)
-    data2["Time"]=data2["Time"].astype(str)
-    data2["NewDate"]=data2["Date"]+data2["Time"]
-    print(data2) 
-    for i in range(len(data2.index)):
-        x=data2.loc[i]
-        print(x)
+    print("Eliminazione header")
+    formato = "%d-%m-%Y %H:%M:%S.%f"
+    with open("out600_combined+header.csv", "r") as input:
+        with open("temp.csv", "w") as output:
+            for line in input:
+                if not line.strip("\n").startswith('#'):
+                    output.write(line)
+    print("Lettura chunk csv")
+    chunk = pd.read_csv('temp.csv',chunksize=1000000,skiprows=1, header=None, low_memory=False)
+    data = pd.concat(chunk)
+
+    print("Ordinamento e creazione data")
+    data=data.sort_values(by=[2,3])
+    data["NewDate"]=data[2].astype(str)+' '+data[3].astype(str)
+    data["NewDate"] = pd.to_datetime(data["NewDate"], format=formato)
+    data['Differenza'] = data['NewDate'].diff().dt.total_seconds() * 1000
+    line = data.iloc[0].to_string(index=False).replace(' ','').replace('\n',',')
+    for i in range(1, len(data.index)):
         p.poll(1)
-        p.produce('user-tracker',x.to_csv(header=False),callback=receipt)
-        p.flush
-        print(str(x['Date']))
-        time.sleep(10)
-    
-    #    data={
-    #       'user_id': fake.random_int(min=20000, max=100000),
-    #       'user_name':fake.name(),
-    #       'user_address':fake.street_address() + ' | ' + fake.city() + ' | ' + fake.country_code(),
-    #       'platform': random.choice(['Mobile', 'Laptop', 'Tablet']),
-    #       'signup_at': str(fake.date_time_this_month())    
-    #       }
-    #    m=json.dumps(data)
-    #    p.poll(1)
-    #    p.produce('user-tracker', m.encode('utf-8'),callback=receipt)
-    #    p.flush()
-    #    time.sleep(3)
-        
+        p.produce('user-tracker', line.encode('utf-8'),callback=receipt)
+        p.flush()
+        line = data.iloc[i]
+        if(line["Differenza"]!=0.0):
+            time.sleep(line["Differenza"]/100)
+        line=line.to_string(index=False).replace(' ','').replace('\n',',')
+    print(line)
+
 if __name__ == '__main__':
     main()
