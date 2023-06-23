@@ -4,7 +4,7 @@ c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumer','a
 print('Kafka Consumer has been initiated...')
 
 print('Available topics to consume: ', c.list_topics().topics)
-c.subscribe(['user-tracker'])
+c.subscribe(['user2'])
 ################
 def main():
     while True:
