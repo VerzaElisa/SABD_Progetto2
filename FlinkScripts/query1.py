@@ -1,6 +1,7 @@
 import json
 import os
 import time, datetime
+from FlinkScripts.FirstElementTimestampAssigner import FirstElementTimestampAssigner
 
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration
 from pyflink.common.watermark_strategy import TimestampAssigner
@@ -12,12 +13,6 @@ from pyflink.common.typeinfo import Types
 def my_map(obj):
     json_obj = json.loads(json.loads(obj))
     return json.dumps(json_obj["name"])
-class FirstElementTimestampAssigner(TimestampAssigner):
-    def extract_timestamp(self, value, record_timestamp):
-        element = datetime.datetime.strptime(value[4]+"|"+value[3],"%d-%m-%Y|%H:%M:%S.%f")
-        timestamp = datetime.datetime.timestamp(element)
-        print(timestamp)
-        return timestamp
 
 def csvToList(f):
     x=f.split(sep=",")
@@ -40,11 +35,11 @@ def kafkaread():
               .with_timestamp_assigner(FirstElementTimestampAssigner())
     
     ds=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
-            .map(func=csvToList)\
-            .filter(func=lambda f:f[0].endswith(".FR"))\
-            .filter(func=lambda f:f[1]=='E')\
-            .map(func=lambda f:(f[0]+"|"+f[4]+"|"+f[3].split(sep=":")[0],(1,float(f[2]))))\
-            .key_by(key_selector=lambda f:f[0])
+          .map(func=csvToList)\
+          .filter(func=lambda f:f[0].endswith(".FR"))\
+          .filter(func=lambda f:f[1]=='E')\
+          .map(func=lambda f:(f[0]+"|"+f[4]+"|"+f[3].split(sep=":")[0],(1,float(f[2]))))\
+          .key_by(key_selector=lambda f:f[0])
     ds1 = ds.window(TumblingProcessingTimeWindows.of(Time.seconds(30)))\
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:(f[0],f[1][1]/f[1][0],f[1][0])).print()

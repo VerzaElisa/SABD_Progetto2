@@ -59,7 +59,7 @@ def create_file():
     
     print('Salvataggio su file')
     output_path = 'dataset.csv'
-    data.to_csv(output_path, header=False,chunksize = 10000, mode='a')
+    data.to_csv(output_path, header=False,chunksize = 10000, mode='a', index=False)
 
 def invio():
     print('Inizio invio')
@@ -70,8 +70,8 @@ def invio():
             p.poll(1)
             p.produce('user',lint_to_string(row),callback=receipt)
             p.flush
-            if float(row[42]) != 0.0:
-                time.sleep(float(row[42])/(3600*10))
+            if float(row[41]) != 0.0:
+                time.sleep(float(row[41])/(3600*10))
         csv_file.close()
 
 def main():
