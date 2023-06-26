@@ -1,4 +1,5 @@
 import csv
+import os
 import time
 from confluent_kafka import Producer
 from faker import Faker
@@ -31,8 +32,13 @@ def receipt(err,msg):
         print(message)
         
 #####################
+def lint_to_string(r):
+    s=''
+    for i in r[:38]:
+        s=s+i+','
+    return s+r[38]
 
-def main():
+def create_file():
     print("Eliminazione header")
     formato = "%d-%m-%Y %H:%M:%S.%f"
     with open("out600_combined+header.csv", "r") as input:
@@ -49,16 +55,32 @@ def main():
     data["NewDate"]=data[2].astype(str)+' '+data[3].astype(str)
     data["NewDate"] = pd.to_datetime(data["NewDate"], format=formato)
     data['Differenza'] = data['NewDate'].diff().dt.total_seconds() * 1000
-    line = data.iloc[0].to_string(index=False).replace(' ','').replace('\n',',')
-    for i in range(1, len(data.index)):
-        p.poll(1)
-        p.produce('user-tracker', line.encode('utf-8'),callback=receipt)
-        p.flush()
-        line = data.iloc[i]
-        if(line["Differenza"]!=0.0):
-            time.sleep(line["Differenza"]/100)
-        line=line.to_string(index=False).replace(' ','').replace('\n',',')
-    print(line)
+    data['Differenza'] = data['Differenza'].shift(-1)
+    
+    print('Salvataggio su file')
+    output_path = 'dataset.csv'
+    data.to_csv(output_path, header=False,chunksize = 10000, mode='a')
+
+def invio():
+    print('Inizio invio')
+    with open("dataset.csv") as csv_file:
+        reader = csv.reader(csv_file)
+        for row in reader:
+            print(row)
+            p.poll(1)
+            p.produce('user',lint_to_string(row),callback=receipt)
+            p.flush
+            if float(row[42]) != 0.0:
+                time.sleep(float(row[42])/(3600*10))
+        csv_file.close()
+
+def main():
+    check = os.path.isfile("./dataset.csv")
+    if check:
+        invio()
+    else:
+        create_file()
+        invio()
 
 if __name__ == '__main__':
     main()
