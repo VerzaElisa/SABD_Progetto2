@@ -34,14 +34,14 @@ def f(r):
 def main():
     #data=pd.read_csv(filepath_or_buffer="../../../Download/out600_combined+header.csv",skiprows=12,low_memory=False,header=None)
     #print(data)
-    with open("FileDataOrdered.csv",'r') as csv_file:
+    with open("dataset.csv") as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
-            if not row[0].startswith('#'):
-                p.poll(1)
-                p.produce('user',f(row),callback=receipt)
-                p.flush
-                time.sleep(0.01)
+            p.poll(1)
+            p.produce('user',f(row),callback=receipt)
+            p.flush
+            if float(f[41]) != 0.0:
+                time.sleep(f[41]/3600*1000)
         csv_file.close()
 if __name__ == '__main__':
     main()
