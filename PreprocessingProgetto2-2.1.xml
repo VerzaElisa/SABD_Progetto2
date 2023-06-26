@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <template encoding-version="1.3">
     <description></description>
-    <groupId>e78a9a90-0188-1000-e52c-e60d0e787186</groupId>
-    <name>preprocessingProgetto2-v2</name>
+    <groupId>e84b96e3-0188-1000-82f8-1e3be99fc89c</groupId>
+    <name>PreprocessingProgetto2-2.1</name>
     <snippet>
         <connections>
-            <id>68a260d2-4901-3d12-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
+            <id>1a33f1a7-8252-361d-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>42a70464-a543-39d7-0000-000000000000</id>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>8d075d15-9415-3e99-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
@@ -23,45 +23,20 @@
             <name></name>
             <selectedRelationships>success</selectedRelationships>
             <source>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>341eafb7-262f-3bb9-0000-000000000000</id>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>171019e6-c67d-37cc-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <connections>
-            <id>731b1ab4-f658-31d1-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
+            <id>2b06f33a-8447-399d-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>732ffd94-b50f-38ca-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </destination>
-            <flowFileExpiration>0 sec</flowFileExpiration>
-            <labelIndex>1</labelIndex>
-            <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
-            <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
-            <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
-            <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
-            <name></name>
-            <selectedRelationships>success</selectedRelationships>
-            <source>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>fd63ef54-e24e-33e9-0000-000000000000</id>
-                <type>PROCESSOR</type>
-            </source>
-            <zIndex>0</zIndex>
-        </connections>
-        <connections>
-            <id>ba59ab76-1aaa-3e6e-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
-            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
-            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
-            <destination>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>fc2055a8-75f2-3144-0000-000000000000</id>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>df8b347c-8e45-3acb-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
@@ -74,20 +49,20 @@
             <selectedRelationships>match</selectedRelationships>
             <selectedRelationships>matched</selectedRelationships>
             <source>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>732ffd94-b50f-38ca-0000-000000000000</id>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>4095603d-59dd-35e5-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <connections>
-            <id>df8bb2ee-fa57-3076-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
+            <id>b23b174c-d0d1-3ff6-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
             <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
             <backPressureObjectThreshold>10000</backPressureObjectThreshold>
             <destination>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>fc2055a8-75f2-3144-0000-000000000000</id>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>4095603d-59dd-35e5-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </destination>
             <flowFileExpiration>0 sec</flowFileExpiration>
@@ -99,17 +74,42 @@
             <name></name>
             <selectedRelationships>success</selectedRelationships>
             <source>
-                <groupId>780527a5-d655-3f67-0000-000000000000</groupId>
-                <id>42a70464-a543-39d7-0000-000000000000</id>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>5db36517-8a80-36cd-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </source>
+            <zIndex>0</zIndex>
+        </connections>
+        <connections>
+            <id>bf1863b6-4f2d-32a7-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
+            <backPressureDataSizeThreshold>1 GB</backPressureDataSizeThreshold>
+            <backPressureObjectThreshold>10000</backPressureObjectThreshold>
+            <destination>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>5db36517-8a80-36cd-0000-000000000000</id>
+                <type>PROCESSOR</type>
+            </destination>
+            <flowFileExpiration>0 sec</flowFileExpiration>
+            <labelIndex>1</labelIndex>
+            <loadBalanceCompression>DO_NOT_COMPRESS</loadBalanceCompression>
+            <loadBalancePartitionAttribute></loadBalancePartitionAttribute>
+            <loadBalanceStatus>LOAD_BALANCE_NOT_CONFIGURED</loadBalanceStatus>
+            <loadBalanceStrategy>DO_NOT_LOAD_BALANCE</loadBalanceStrategy>
+            <name></name>
+            <selectedRelationships>success</selectedRelationships>
+            <source>
+                <groupId>a72b475a-6420-33d3-0000-000000000000</groupId>
+                <id>8d075d15-9415-3e99-0000-000000000000</id>
                 <type>PROCESSOR</type>
             </source>
             <zIndex>0</zIndex>
         </connections>
         <processors>
-            <id>341eafb7-262f-3bb9-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
+            <id>171019e6-c67d-37cc-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
             <position>
-                <x>80.0</x>
+                <x>72.0</x>
                 <y>0.0</y>
             </position>
             <bundle>
@@ -435,10 +435,287 @@
             <type>org.apache.nifi.processors.kafka.pubsub.ConsumeKafka_2_6</type>
         </processors>
         <processors>
-            <id>42a70464-a543-39d7-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
+            <id>4095603d-59dd-35e5-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
             <position>
-                <x>720.0</x>
+                <x>504.0</x>
+                <y>248.0</y>
+            </position>
+            <bundle>
+                <artifact>nifi-standard-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <config>
+                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
+                <bulletinLevel>WARN</bulletinLevel>
+                <comments></comments>
+                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                <descriptors>
+                    <entry>
+                        <key>Routing Strategy</key>
+                        <value>
+                            <name>Routing Strategy</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Matching Strategy</key>
+                        <value>
+                            <name>Matching Strategy</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Character Set</key>
+                        <value>
+                            <name>Character Set</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Ignore Leading/Trailing Whitespace</key>
+                        <value>
+                            <name>Ignore Leading/Trailing Whitespace</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Ignore Case</key>
+                        <value>
+                            <name>Ignore Case</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Grouping Regular Expression</key>
+                        <value>
+                            <name>Grouping Regular Expression</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>match</key>
+                        <value>
+                            <name>match</name>
+                        </value>
+                    </entry>
+                </descriptors>
+                <executionNode>ALL</executionNode>
+                <lossTolerant>false</lossTolerant>
+                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
+                <penaltyDuration>30 sec</penaltyDuration>
+                <properties>
+                    <entry>
+                        <key>Routing Strategy</key>
+                        <value>Route to each matching Property Name</value>
+                    </entry>
+                    <entry>
+                        <key>Matching Strategy</key>
+                        <value>Matches Regular Expression</value>
+                    </entry>
+                    <entry>
+                        <key>Character Set</key>
+                        <value>UTF-8</value>
+                    </entry>
+                    <entry>
+                        <key>Ignore Leading/Trailing Whitespace</key>
+                        <value>true</value>
+                    </entry>
+                    <entry>
+                        <key>Ignore Case</key>
+                        <value>false</value>
+                    </entry>
+                    <entry>
+                        <key>Grouping Regular Expression</key>
+                    </entry>
+                    <entry>
+                        <key>match</key>
+                        <value>^(.*?),(.*?),(.*?),(.*?),(..*)$</value>
+                    </entry>
+                </properties>
+                <retryCount>10</retryCount>
+                <runDurationMillis>0</runDurationMillis>
+                <schedulingPeriod>0 sec</schedulingPeriod>
+                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                <yieldDuration>1 sec</yieldDuration>
+            </config>
+            <executionNodeRestricted>false</executionNodeRestricted>
+            <name>RouteText</name>
+            <relationships>
+                <autoTerminate>false</autoTerminate>
+                <name>match</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>original</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>unmatched</name>
+                <retry>false</retry>
+            </relationships>
+            <state>RUNNING</state>
+            <style/>
+            <type>org.apache.nifi.processors.standard.RouteText</type>
+        </processors>
+        <processors>
+            <id>5db36517-8a80-36cd-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
+            <position>
+                <x>1048.0</x>
+                <y>256.0</y>
+            </position>
+            <bundle>
+                <artifact>nifi-standard-nar</artifact>
+                <group>org.apache.nifi</group>
+                <version>1.21.0</version>
+            </bundle>
+            <config>
+                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
+                <bulletinLevel>WARN</bulletinLevel>
+                <comments></comments>
+                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
+                <descriptors>
+                    <entry>
+                        <key>Replacement Strategy</key>
+                        <value>
+                            <name>Replacement Strategy</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Regular Expression</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Regex Replace</dependentValues>
+<dependentValues>Literal Replace</dependentValues>
+<propertyName>Replacement Strategy</propertyName>
+                            </dependencies>
+                            <name>Regular Expression</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Replacement Value</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Prepend</dependentValues>
+<dependentValues>Regex Replace</dependentValues>
+<dependentValues>Always Replace</dependentValues>
+<dependentValues>Append</dependentValues>
+<dependentValues>Literal Replace</dependentValues>
+<propertyName>Replacement Strategy</propertyName>
+                            </dependencies>
+                            <name>Replacement Value</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Text to Prepend</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Surround</dependentValues>
+<propertyName>Replacement Strategy</propertyName>
+                            </dependencies>
+                            <name>Text to Prepend</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Text to Append</key>
+                        <value>
+                            <dependencies>
+<dependentValues>Surround</dependentValues>
+<propertyName>Replacement Strategy</propertyName>
+                            </dependencies>
+                            <name>Text to Append</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Character Set</key>
+                        <value>
+                            <name>Character Set</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Maximum Buffer Size</key>
+                        <value>
+                            <name>Maximum Buffer Size</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Evaluation Mode</key>
+                        <value>
+                            <name>Evaluation Mode</name>
+                        </value>
+                    </entry>
+                    <entry>
+                        <key>Line-by-Line Evaluation Mode</key>
+                        <value>
+                            <name>Line-by-Line Evaluation Mode</name>
+                        </value>
+                    </entry>
+                </descriptors>
+                <executionNode>ALL</executionNode>
+                <lossTolerant>false</lossTolerant>
+                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
+                <penaltyDuration>30 sec</penaltyDuration>
+                <properties>
+                    <entry>
+                        <key>Replacement Strategy</key>
+                        <value>Regex Replace</value>
+                    </entry>
+                    <entry>
+                        <key>Regular Expression</key>
+                        <value>^((.*?),(.*?),(.*?),00:00:00.000,(.*))|ID,.*$</value>
+                    </entry>
+                    <entry>
+                        <key>Replacement Value</key>
+                        <value></value>
+                    </entry>
+                    <entry>
+                        <key>Text to Prepend</key>
+                    </entry>
+                    <entry>
+                        <key>Text to Append</key>
+                    </entry>
+                    <entry>
+                        <key>Character Set</key>
+                        <value>UTF-8</value>
+                    </entry>
+                    <entry>
+                        <key>Maximum Buffer Size</key>
+                        <value>1 MB</value>
+                    </entry>
+                    <entry>
+                        <key>Evaluation Mode</key>
+                        <value>Line-by-Line</value>
+                    </entry>
+                    <entry>
+                        <key>Line-by-Line Evaluation Mode</key>
+                        <value>All</value>
+                    </entry>
+                </properties>
+                <retryCount>10</retryCount>
+                <runDurationMillis>25</runDurationMillis>
+                <schedulingPeriod>0 sec</schedulingPeriod>
+                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
+                <yieldDuration>1 sec</yieldDuration>
+            </config>
+            <executionNodeRestricted>false</executionNodeRestricted>
+            <name>ReplaceText</name>
+            <relationships>
+                <autoTerminate>true</autoTerminate>
+                <name>failure</name>
+                <retry>false</retry>
+            </relationships>
+            <relationships>
+                <autoTerminate>false</autoTerminate>
+                <name>success</name>
+                <retry>false</retry>
+            </relationships>
+            <state>RUNNING</state>
+            <style/>
+            <type>org.apache.nifi.processors.standard.ReplaceText</type>
+        </processors>
+        <processors>
+            <id>8d075d15-9415-3e99-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
+            <position>
+                <x>1056.0</x>
                 <y>0.0</y>
             </position>
             <bundle>
@@ -591,132 +868,11 @@
             <type>org.apache.nifi.processors.standard.ReplaceText</type>
         </processors>
         <processors>
-            <id>732ffd94-b50f-38ca-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
-            <position>
-                <x>248.0</x>
-                <y>384.0</y>
-            </position>
-            <bundle>
-                <artifact>nifi-standard-nar</artifact>
-                <group>org.apache.nifi</group>
-                <version>1.21.0</version>
-            </bundle>
-            <config>
-                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
-                <bulletinLevel>WARN</bulletinLevel>
-                <comments></comments>
-                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                <descriptors>
-                    <entry>
-                        <key>Routing Strategy</key>
-                        <value>
-                            <name>Routing Strategy</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Matching Strategy</key>
-                        <value>
-                            <name>Matching Strategy</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Character Set</key>
-                        <value>
-                            <name>Character Set</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Ignore Leading/Trailing Whitespace</key>
-                        <value>
-                            <name>Ignore Leading/Trailing Whitespace</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Ignore Case</key>
-                        <value>
-                            <name>Ignore Case</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Grouping Regular Expression</key>
-                        <value>
-                            <name>Grouping Regular Expression</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>match</key>
-                        <value>
-                            <name>match</name>
-                        </value>
-                    </entry>
-                </descriptors>
-                <executionNode>ALL</executionNode>
-                <lossTolerant>false</lossTolerant>
-                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
-                <penaltyDuration>30 sec</penaltyDuration>
-                <properties>
-                    <entry>
-                        <key>Routing Strategy</key>
-                        <value>Route to each matching Property Name</value>
-                    </entry>
-                    <entry>
-                        <key>Matching Strategy</key>
-                        <value>Matches Regular Expression</value>
-                    </entry>
-                    <entry>
-                        <key>Character Set</key>
-                        <value>UTF-8</value>
-                    </entry>
-                    <entry>
-                        <key>Ignore Leading/Trailing Whitespace</key>
-                        <value>true</value>
-                    </entry>
-                    <entry>
-                        <key>Ignore Case</key>
-                        <value>false</value>
-                    </entry>
-                    <entry>
-                        <key>Grouping Regular Expression</key>
-                    </entry>
-                    <entry>
-                        <key>match</key>
-                        <value>^(.*?),(.*?),(.*?),(.*?),(..*)$</value>
-                    </entry>
-                </properties>
-                <retryCount>10</retryCount>
-                <runDurationMillis>0</runDurationMillis>
-                <schedulingPeriod>0 sec</schedulingPeriod>
-                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                <yieldDuration>1 sec</yieldDuration>
-            </config>
-            <executionNodeRestricted>false</executionNodeRestricted>
-            <name>RouteText</name>
-            <relationships>
-                <autoTerminate>false</autoTerminate>
-                <name>match</name>
-                <retry>false</retry>
-            </relationships>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>original</name>
-                <retry>false</retry>
-            </relationships>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>unmatched</name>
-                <retry>false</retry>
-            </relationships>
-            <state>STOPPED</state>
-            <style/>
-            <type>org.apache.nifi.processors.standard.RouteText</type>
-        </processors>
-        <processors>
-            <id>fc2055a8-75f2-3144-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
+            <id>df8b347c-8e45-3acb-0000-000000000000</id>
+            <parentGroupId>a72b475a-6420-33d3-0000-000000000000</parentGroupId>
             <position>
                 <x>0.0</x>
-                <y>200.0</y>
+                <y>248.0</y>
             </position>
             <bundle>
                 <artifact>nifi-kafka-2-6-nar</artifact>
@@ -1062,162 +1218,6 @@
             <style/>
             <type>org.apache.nifi.processors.kafka.pubsub.PublishKafka_2_6</type>
         </processors>
-        <processors>
-            <id>fd63ef54-e24e-33e9-0000-000000000000</id>
-            <parentGroupId>780527a5-d655-3f67-0000-000000000000</parentGroupId>
-            <position>
-                <x>784.0</x>
-                <y>280.0</y>
-            </position>
-            <bundle>
-                <artifact>nifi-standard-nar</artifact>
-                <group>org.apache.nifi</group>
-                <version>1.21.0</version>
-            </bundle>
-            <config>
-                <backoffMechanism>PENALIZE_FLOWFILE</backoffMechanism>
-                <bulletinLevel>WARN</bulletinLevel>
-                <comments></comments>
-                <concurrentlySchedulableTaskCount>1</concurrentlySchedulableTaskCount>
-                <descriptors>
-                    <entry>
-                        <key>Replacement Strategy</key>
-                        <value>
-                            <name>Replacement Strategy</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Regular Expression</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Regex Replace</dependentValues>
-<dependentValues>Literal Replace</dependentValues>
-<propertyName>Replacement Strategy</propertyName>
-                            </dependencies>
-                            <name>Regular Expression</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Replacement Value</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Prepend</dependentValues>
-<dependentValues>Regex Replace</dependentValues>
-<dependentValues>Always Replace</dependentValues>
-<dependentValues>Append</dependentValues>
-<dependentValues>Literal Replace</dependentValues>
-<propertyName>Replacement Strategy</propertyName>
-                            </dependencies>
-                            <name>Replacement Value</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Text to Prepend</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Surround</dependentValues>
-<propertyName>Replacement Strategy</propertyName>
-                            </dependencies>
-                            <name>Text to Prepend</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Text to Append</key>
-                        <value>
-                            <dependencies>
-<dependentValues>Surround</dependentValues>
-<propertyName>Replacement Strategy</propertyName>
-                            </dependencies>
-                            <name>Text to Append</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Character Set</key>
-                        <value>
-                            <name>Character Set</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Maximum Buffer Size</key>
-                        <value>
-                            <name>Maximum Buffer Size</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Evaluation Mode</key>
-                        <value>
-                            <name>Evaluation Mode</name>
-                        </value>
-                    </entry>
-                    <entry>
-                        <key>Line-by-Line Evaluation Mode</key>
-                        <value>
-                            <name>Line-by-Line Evaluation Mode</name>
-                        </value>
-                    </entry>
-                </descriptors>
-                <executionNode>ALL</executionNode>
-                <lossTolerant>false</lossTolerant>
-                <maxBackoffPeriod>10 mins</maxBackoffPeriod>
-                <penaltyDuration>30 sec</penaltyDuration>
-                <properties>
-                    <entry>
-                        <key>Replacement Strategy</key>
-                        <value>Regex Replace</value>
-                    </entry>
-                    <entry>
-                        <key>Regular Expression</key>
-                        <value>^((.*?),(.*?),(.*?),00:00:00.000,(.*))|ID,.*$</value>
-                    </entry>
-                    <entry>
-                        <key>Replacement Value</key>
-                        <value></value>
-                    </entry>
-                    <entry>
-                        <key>Text to Prepend</key>
-                    </entry>
-                    <entry>
-                        <key>Text to Append</key>
-                    </entry>
-                    <entry>
-                        <key>Character Set</key>
-                        <value>UTF-8</value>
-                    </entry>
-                    <entry>
-                        <key>Maximum Buffer Size</key>
-                        <value>1 MB</value>
-                    </entry>
-                    <entry>
-                        <key>Evaluation Mode</key>
-                        <value>Line-by-Line</value>
-                    </entry>
-                    <entry>
-                        <key>Line-by-Line Evaluation Mode</key>
-                        <value>All</value>
-                    </entry>
-                </properties>
-                <retryCount>10</retryCount>
-                <runDurationMillis>25</runDurationMillis>
-                <schedulingPeriod>0 sec</schedulingPeriod>
-                <schedulingStrategy>TIMER_DRIVEN</schedulingStrategy>
-                <yieldDuration>1 sec</yieldDuration>
-            </config>
-            <executionNodeRestricted>false</executionNodeRestricted>
-            <name>ReplaceText</name>
-            <relationships>
-                <autoTerminate>true</autoTerminate>
-                <name>failure</name>
-                <retry>false</retry>
-            </relationships>
-            <relationships>
-                <autoTerminate>false</autoTerminate>
-                <name>success</name>
-                <retry>false</retry>
-            </relationships>
-            <state>STOPPED</state>
-            <style/>
-            <type>org.apache.nifi.processors.standard.ReplaceText</type>
-        </processors>
     </snippet>
-    <timestamp>06/23/2023 10:57:10 UTC</timestamp>
+    <timestamp>06/26/2023 08:03:35 UTC</timestamp>
 </template>
