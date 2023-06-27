@@ -31,3 +31,6 @@ docker compose build
 docker compose up -d
 echo "inizio setup"
 docker exec -it flink sh /data/setup.sh
+cd ScriptSetUpNIFI
+sh LogIn.sh
+cd ..
