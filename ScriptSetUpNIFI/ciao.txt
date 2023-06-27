@@ -1,3 +1,0 @@
-2023-06-27 19:02:32,896 INFO [main] org.apache.nifi.bootstrap.Command Generated Self-Signed Certificate SHA-256: 05591AFD6FE77DD6201F76EB578688D7D487AEB3A2F7107A133B206F51B7E6DB
-Generated Username [074a2d8a-33bc-4b3b-939c-45dd9f0254d3]
-Generated Password [NS8ow//aRig3cLXVOljc2ewlgJSHeGA8]
