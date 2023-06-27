@@ -71,7 +71,7 @@ def invio():
             p.produce('user',lint_to_string(row),callback=receipt)
             p.flush
             if float(row[41]) != 0.0:
-                time.sleep(float(row[41])/(3600*10))
+                time.sleep(float(row[41])/(3600*1000/4))
         csv_file.close()
 
 def main():
