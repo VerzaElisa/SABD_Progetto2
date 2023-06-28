@@ -28,5 +28,8 @@ def main():
             file3.write(data+"\n")
             continue
     c.close()
+    file1.close()
+    file2.close()
+    file3.close()
 if __name__ == '__main__':
     main()

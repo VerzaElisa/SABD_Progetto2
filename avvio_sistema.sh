@@ -29,8 +29,13 @@ fi
 cd ..
 docker compose build
 docker compose up -d
-echo "inizio setup"
+echo "inizio setup Flink"
 docker exec -it flink sh /data/setup.sh
+
+echo "inizio setup Kafka Topix"
+sh avvio_topic.sh
+
+echo "inizio setup NIFI"
 cd ScriptSetUpNIFI
 sh LogIn.sh
 cd ..

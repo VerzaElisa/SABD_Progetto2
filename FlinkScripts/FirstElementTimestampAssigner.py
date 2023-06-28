@@ -7,5 +7,4 @@ class FirstElementTimestampAssigner(TimestampAssigner):
     def extract_timestamp(self, value, record_timestamp):
         element = datetime.datetime.strptime(value[4]+"|"+value[3],"%d-%m-%Y|%H:%M:%S.%f")
         timestamp = datetime.datetime.timestamp(element)
-        print(timestamp)
         return timestamp*1000
