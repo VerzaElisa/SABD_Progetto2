@@ -7,12 +7,14 @@ echo "$extracted_info"
 echo "Informazione 1: $info1"
 echo "Informazione 2: $info2"
 echo "Informazione 3: $info3"
-x=$(curl -i -s -k -X $'POST' \
-    -H $'Host: localhost:8443' -H $'Content-Length: 87' -H $'Sec-Ch-Ua: ' -H $'Sec-Ch-Ua-Mobile: ?0' -H $'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.134 Safari/537.36' -H $'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H $'Accept: */*' -H $'X-Requested-With: XMLHttpRequest' -H $'Request-Token: 8b70dad2-f285-46e3-adae-b22d63223358' -H $'Sec-Ch-Ua-Platform: \"\"' -H $'Origin: https://localhost:8443' -H $'Sec-Fetch-Site: same-origin' -H $'Sec-Fetch-Mode: cors' -H $'Sec-Fetch-Dest: empty' -H $'Referer: https://localhost:8443/nifi/login' -H $'Accept-Encoding: gzip, deflate' -H $'Accept-Language: it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7' -H $'Connection: close' \
+str="username=$info2&password=$info3"
+len=${#str}
+echo $str di cui dim $len
+curl -i -s -k -X $'POST' \
+    -H $'Host: localhost:8443' -H $'Content-Length:'$len -H $'Sec-Ch-Ua: ' -H $'Sec-Ch-Ua-Mobile: ?0' -H $'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.134 Safari/537.36' -H $'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H $'Accept: */*' -H $'X-Requested-With: XMLHttpRequest' -H $'Request-Token: 8b70dad2-f285-46e3-adae-b22d63223358' -H $'Sec-Ch-Ua-Platform: \"\"' -H $'Origin: https://localhost:8443' -H $'Sec-Fetch-Site: same-origin' -H $'Sec-Fetch-Mode: cors' -H $'Sec-Fetch-Dest: empty' -H $'Referer: https://localhost:8443/nifi/login' -H $'Accept-Encoding: gzip, deflate' -H $'Accept-Language: it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7' -H $'Connection: close' \
     -b $'__Secure-Request-Token=8b70dad2-f285-46e3-adae-b22d63223358' \
     --data-binary $'username='$info2'&password='$info3 \
-    $'https://localhost:8443/nifi-api/access/token' --output file1.txt )
-s=$(head -n 14 file1.txt | grep __Secure-Authorization-Bearer )
+    $'https://localhost:8443/nifi-api/access/token' --output file1.txt
+s=$(head -n 14 file1.txt | grep Set-Cookie )
 y=$(echo $s |tr ';' '\n' | grep __Secure-Authorization-Bearer| cut -c 43-)
-echo $y
-sh CreazioneFlusso.sh $y
+bash CreazioneFlusso.sh $y
