@@ -33,9 +33,9 @@ echo "inizio setup Flink"
 docker exec -it flink sh /data/setup.sh
 
 echo "inizio setup Kafka Topix"
-sh avvio_topic.sh
+bash avvio_topic.sh
 
 echo "inizio setup NIFI"
 cd ScriptSetUpNIFI
-sh LogIn.sh
+bash LogIn.sh
 cd ..

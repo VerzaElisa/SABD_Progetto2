@@ -9,3 +9,4 @@ apache-flink*.tar.gz
 /ScriptSetUpNIFI/file1.txt
 /ScriptSetUpNIFI/file2.txt
 /ScriptSetUpNIFI/Credenziali.txt
+/FlinkScripts/__pycache__
