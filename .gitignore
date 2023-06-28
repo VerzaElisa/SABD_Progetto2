@@ -6,3 +6,6 @@ apache-flink*.tar.gz
 /out600_combined+header.csv
 /profileNifi.txt
 /dataset.csv
+/ScriptSetUpNIFI/file1.txt
+/ScriptSetUpNIFI/file2.txt
+/ScriptSetUpNIFI/Credenziali.txt
