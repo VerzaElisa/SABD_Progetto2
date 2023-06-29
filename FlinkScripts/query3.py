@@ -14,6 +14,9 @@ from pyflink.common.typeinfo import Types
 from pyflink.datastream.time_characteristic import TimeCharacteristic
 #libreria per il quantile dinamico
 from psquare.psquare import PSquare
+format = "%d-%m-%Y|%H:%M:%S.%f"
+
+
 class PercentileProcessFunction(ProcessWindowFunction):
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         percentile25 = PSquare(25)
@@ -31,7 +34,7 @@ def my_map(obj):
 
 def csvToList(f):
     x=f.split(sep=",")
-    return x
+    return x + [datetime.datetime.strptime(x[4]+'|'+x[3], format)]
 def toString(f):
     s=""
     for i in range(len(f)-1):
