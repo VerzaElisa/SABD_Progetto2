@@ -26,10 +26,10 @@ print('Kafka Producer has been initiated...')
 def receipt(err,msg):
     if err is not None:
         print('Error: {}'.format(err))
-    else:
-        message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
-        logger.info(message)
-        print(message)
+    #else:
+    #    message = 'Produced message on topic {} with value of {}\n'.format(msg.topic(), msg.value().decode('utf-8'))
+    #    logger.info(message)
+    #    print(message)
         
 #####################
 def lint_to_string(r):
@@ -66,7 +66,6 @@ def invio():
     with open("dataset.csv") as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
-            print(row)
             p.poll(1)
             p.produce('user',lint_to_string(row),callback=receipt)
             p.flush

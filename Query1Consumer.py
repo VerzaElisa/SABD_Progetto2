@@ -20,12 +20,15 @@ def main():
         data=msg.value().decode('utf-8')
         if msg.topic()=="resultQuery1-30minutes":
             file1.write(data+"\n")
+            file1.flush()
             continue
         if msg.topic()=="resultQuery1-1days":
             file2.write(data+"\n")
+            file2.flush()
             continue
         if msg.topic()=="resultQuery1-1days":
             file3.write(data+"\n")
+            file3.flush()
             continue
     c.close()
     file1.close()
