@@ -81,6 +81,7 @@ def kafkaread():
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
+            .print()
             .sink_to(sink2)
         ds3 = ds.window(GlobalWindows.create())\
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\

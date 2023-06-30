@@ -69,8 +69,8 @@ def invio():
             p.poll(1)
             p.produce('user',lint_to_string(row),callback=receipt)
             p.flush
-            if float(row[41]) != 0.0:
-                time.sleep(float(row[41])/(3600*1000))
+            #if float(row[41]) != 0.0:
+                #time.sleep(float(row[41])/(3600*1000))
         csv_file.close()
 
 def main():

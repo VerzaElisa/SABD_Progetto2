@@ -26,12 +26,12 @@ class PercentileProcessFunction(ProcessWindowFunction):
             percentile25.update(e[1])
             percentile50.update(e[1])
             percentile75.update(e[1])
-        return [[key,percentile25.p_estimate(),percentile50.p_estimate(),percentile75.p_estimate()]]
- 
+        if len(elements)>5:
+            return [[datetime.datetime.fromtimestamp(context.window().start/1000),key,len(elements),percentile25.p_estimate(),percentile50.p_estimate(),percentile75.p_estimate()]]
+        return []
 def my_map(obj):
     json_obj = json.loads(json.loads(obj))
     return json.dumps(json_obj["name"])
-
 def csvToList(f):
     x=f.split(sep=",")
     return x + [datetime.datetime.strptime(x[4]+'|'+x[3], format)]
@@ -41,9 +41,6 @@ def toString(f):
         s=s+str(f[i])+","
     s=s+str(f[len(f)-1])
     return s
-def Quantile(x):
-    n=n+1
-
 def kafkaread():
         env = StreamExecutionEnvironment.get_execution_environment()
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
