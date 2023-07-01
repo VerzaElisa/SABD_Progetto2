@@ -3,15 +3,20 @@ from typing import Iterable
 from operator import itemgetter
 from pyflink.datastream.window import TimeWindow
 from pyflink.common.watermark_strategy import TimestampAssigner
-from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction
+from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction
 format = "%d-%m-%Y|%H:%M:%S.%f"
 
 class CountWindowProcessFunction(ProcessWindowFunction):    
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         x=sorted(elements, key=itemgetter(5))
-        return [[x[0][0],float(x[-1][2])-float(x[0][2]),context.window().start, context.window().end]]
+        return [[x[0][0],float(x[-1][2])-float(x[0][2]),context.window().start]]
 
-    
+class Chart(ProcessAllWindowFunction):
+    def process(self, ctx, elements):
+        x=sorted(elements, key=itemgetter(1))
+        res = x[:5]+x[-5:]
+        return sorted(res, key=itemgetter(1), reverse=True)
+
 class  OurTimestampAssigner(TimestampAssigner):
     def extract_timestamp(self, value, record_timestamp):
         element = datetime.datetime.strptime(value[4]+"|"+value[3],"%d-%m-%Y|%H:%M:%S.%f")
