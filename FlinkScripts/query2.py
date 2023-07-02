@@ -18,6 +18,7 @@ from pyflink.common.typeinfo import Types
 from pyflink.datastream.window import TimeWindow
 from pyflink.datastream.connectors import StreamingFileSink
 from pyflink.datastream.functions import ReduceFunction
+from pyflink.datastream.connectors.kafka import KafkaSink, KafkaRecordSerializationSchema,DeliveryGuarantee
 from pyflink.datastream.connectors.file_system import FileSink, OutputFileConfig, RollingPolicy
 
 from pyflink.datastream import StreamExecutionEnvironment, ProcessWindowFunction, ProcessFunction
@@ -30,30 +31,71 @@ def csvToList(f):
 
 def kafkaread():
     env = StreamExecutionEnvironment.get_execution_environment()
-    t_env = StreamTableEnvironment.create(env)
-
     env.set_parallelism(1)
     env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
     
     source = KafkaSource.builder().set_bootstrap_servers("kafka:29092") \
                                   .set_topics("user2") \
-                                  .set_group_id("query1") \
+                                  .set_group_id("query2") \
                                   .set_value_only_deserializer(SimpleStringSchema()) \
                                   .build()
 
-    watermark=WatermarkStrategy.for_bounded_out_of_orderness(Duration.of_seconds(10))\
+    watermark=WatermarkStrategy.for_monotonous_timestamps()\
                                .with_timestamp_assigner(OurTimestampAssigner())
+    #Creo i KafkaSink per andare a scrivere su 3 topic differenti i risultati delle query
+    record_serializer1 = KafkaRecordSerializationSchema.builder() \
+        .set_topic("resultQuery2-30minutes") \
+        .set_value_serialization_schema(SimpleStringSchema()) \
+        .build()
+    sink1 = KafkaSink.builder() \
+        .set_bootstrap_servers("kafka:29092") \
+        .set_record_serializer(record_serializer1)\
+        .build()
+    record_serializer2 = KafkaRecordSerializationSchema.builder() \
+        .set_topic("resultQuery2-1hour") \
+        .set_value_serialization_schema(SimpleStringSchema()) \
+        .build()
+    sink2 = KafkaSink.builder() \
+        .set_bootstrap_servers("kafka:29092") \
+        .set_record_serializer(record_serializer2)\
+        .build()
+    record_serializer3 = KafkaRecordSerializationSchema.builder() \
+        .set_topic("resultQuery2-1day") \
+        .set_value_serialization_schema(SimpleStringSchema()) \
+        .build()
+    sink3 = KafkaSink.builder() \
+        .set_bootstrap_servers("kafka:29092") \
+        .set_record_serializer(record_serializer3)\
+        .build()
+
     
-    ds=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+    ds1=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
           .map(func=csvToList)\
           .key_by(key_selector=lambda f:f[0])\
           .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
           .process(CountWindowProcessFunction())\
           .window_all(TumblingEventTimeWindows.of(Time.minutes(30)))\
-          .process(Chart()).print()
-
+          .process(Chart())\
+          .sink_to(sink1)
+    ds2=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+        .map(func=csvToList)\
+        .key_by(key_selector=lambda f:f[0])\
+        .window(TumblingEventTimeWindows.of(Time.hours(1)))\
+        .process(CountWindowProcessFunction())\
+        .window_all(TumblingEventTimeWindows.of(Time.minutes(30)))\
+        .process(Chart())\
+        .sink_to(sink2)
+    ds3=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+        .map(func=csvToList)\
+        .key_by(key_selector=lambda f:f[0])\
+        .window(TumblingEventTimeWindows.of(Time.days(1)))\
+        .process(CountWindowProcessFunction())\
+        .window_all(TumblingEventTimeWindows.of(Time.minutes(30)))\
+        .process(Chart())\
+        .sink_to(sink3)
 
     env.execute('kafkaread')
-
+    env.close()
+    
 if __name__ == '__main__':
     kafkaread()
