@@ -3,7 +3,7 @@ import os
 import time, datetime
 from typing import Iterable
 from pyflink.datastream.functions import ProcessWindowFunction 
-from Utility import OurTimestampAssigner, CountWindowProcessFunction
+from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -66,17 +66,57 @@ def kafkaread():
             .set_bootstrap_servers("kafka:29092") \
             .set_record_serializer(record_serializer1)\
             .build()
+        record_serializer2 = KafkaRecordSerializationSchema.builder() \
+            .set_topic("resultQuery3-1hour") \
+            .set_value_serialization_schema(SimpleStringSchema()) \
+            .build()
+        sink2 = KafkaSink.builder() \
+            .set_bootstrap_servers("kafka:29092") \
+            .set_record_serializer(record_serializer2)\
+            .build()
+        record_serializer3 = KafkaRecordSerializationSchema.builder() \
+            .set_topic("resultQuery3-1day") \
+            .set_value_serialization_schema(SimpleStringSchema()) \
+            .build()
+        sink3 = KafkaSink.builder() \
+            .set_bootstrap_servers("kafka:29092") \
+            .set_record_serializer(record_serializer3)\
+            .build()
         #inizio a creare il flusso dei dati comune
-        ds=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
-            .map(func=csvToList)\
-            .assign_timestamps_and_watermarks(watermark)\
-            .key_by(key_selector=lambda f:f[0])\
-            .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
-            .process(CountWindowProcessFunction())\
-            .key_by(lambda f:f[0].split(sep=".")[1])\
-            .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
-            .process(PercentileProcessFunction())\
-            .print()
+        ds1=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+                .map(func=csvToList)\
+                .assign_timestamps_and_watermarks(watermark)\
+                .key_by(key_selector=lambda f:f[0])\
+                .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
+                .process(CountWindowProcessFunction())\
+                .key_by(lambda f:f[0].split(sep=".")[1])\
+                .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
+                .process(PercentileProcessFunction())\
+                .map(lambda f: toString(f))\
+                .sink_to(sink1)
+        ds2=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+                .map(func=csvToList)\
+                .assign_timestamps_and_watermarks(watermark)\
+                .key_by(key_selector=lambda f:f[0])\
+                .window(TumblingEventTimeWindows.of(Time.hours(1)))\
+                .process(CountWindowProcessFunction())\
+                .key_by(lambda f:f[0].split(sep=".")[1])\
+                .window(TumblingEventTimeWindows.of(Time.hours(1)))\
+                .process(PercentileProcessFunction())\
+                .map(lambda f: toString(f))\
+                .sink_to(sink2)
+        ds3=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+                .map(func=csvToList)\
+                .assign_timestamps_and_watermarks(watermark)\
+                .key_by(key_selector=lambda f:f[0])\
+                .window(TumblingEventTimeWindows.of(Time.days(1)))\
+                .process(CountWindowProcessFunction())\
+                .key_by(lambda f:f[0].split(sep=".")[1])\
+                .window(TumblingEventTimeWindows.of(Time.days(1)))\
+                .process(PercentileProcessFunction())\
+                .map(lambda f: toString(f))\
+                .sink_to(sink3)
+
         env.execute('kafkaread')
         env.close()
 

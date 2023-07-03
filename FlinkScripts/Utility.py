@@ -6,6 +6,14 @@ from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction
 format = "%d-%m-%Y|%H:%M:%S.%f"
 
+def toString(f):
+    s=""
+    for i in range(len(f)-1):
+        s=s+str(f[i])+","
+    s=s+str(f[len(f)-1])
+    return s
+
+
 class CountWindowProcessFunction(ProcessWindowFunction):    
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         x=sorted(elements, key=itemgetter(5))

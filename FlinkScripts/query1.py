@@ -1,7 +1,7 @@
 import json
 import os
 import time, datetime
-from Utility import OurTimestampAssigner
+from Utility import OurTimestampAssigner, toString
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -18,12 +18,7 @@ def my_map(obj):
 def csvToList(f):
     x=f.split(sep=",")
     return x
-def toString(f):
-    s=""
-    for i in range(len(f)-1):
-        s=s+str(f[i])+","
-    s=s+str(f[len(f)-1])
-    return s
+
 def kafkaread():
         env = StreamExecutionEnvironment.get_execution_environment()
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
