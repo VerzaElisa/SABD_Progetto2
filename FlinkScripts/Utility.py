@@ -4,6 +4,9 @@ from operator import itemgetter
 from pyflink.datastream.window import TimeWindow
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction
+#libreria per il quantile dinamico
+from psquare.psquare import PSquare
+
 format = "%d-%m-%Y|%H:%M:%S.%f"
 
 def toString(f):
@@ -17,7 +20,7 @@ def toString(f):
 class CountWindowProcessFunction(ProcessWindowFunction):    
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         x=sorted(elements, key=itemgetter(5))
-        return [[x[0][0],float(x[-1][2])-float(x[0][2]),context.window().start]]
+        return [[x[0][0],float(x[-1][2])-float(x[0][2]),context.window().start, PSquare(25), 0]]
 
 class Chart(ProcessAllWindowFunction):
     def process(self, ctx, elements):

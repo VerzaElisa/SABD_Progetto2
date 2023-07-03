@@ -2,7 +2,7 @@ import json
 import os
 import time, datetime
 from typing import Iterable
-from pyflink.datastream.functions import ProcessWindowFunction 
+from pyflink.datastream.functions import ProcessWindowFunction, ReduceFunction
 from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
@@ -90,35 +90,22 @@ def kafkaread():
                 .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
                 .process(CountWindowProcessFunction())\
                 .key_by(lambda f:f[0].split(sep=".")[1])\
-                .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
-                .process(PercentileProcessFunction())\
-                .map(lambda f: toString(f))\
-                .sink_to(sink1)
-        ds2=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
-                .map(func=csvToList)\
-                .assign_timestamps_and_watermarks(watermark)\
-                .key_by(key_selector=lambda f:f[0])\
-                .window(TumblingEventTimeWindows.of(Time.hours(1)))\
-                .process(CountWindowProcessFunction())\
-                .key_by(lambda f:f[0].split(sep=".")[1])\
-                .window(TumblingEventTimeWindows.of(Time.hours(1)))\
-                .process(PercentileProcessFunction())\
-                .map(lambda f: toString(f))\
-                .sink_to(sink2)
-        ds3=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
-                .map(func=csvToList)\
-                .assign_timestamps_and_watermarks(watermark)\
-                .key_by(key_selector=lambda f:f[0])\
-                .window(TumblingEventTimeWindows.of(Time.days(1)))\
-                .process(CountWindowProcessFunction())\
-                .key_by(lambda f:f[0].split(sep=".")[1])\
-                .window(TumblingEventTimeWindows.of(Time.days(1)))\
-                .process(PercentileProcessFunction())\
-                .map(lambda f: toString(f))\
-                .sink_to(sink3)
+                .reduce(ReduceFunctionPerc()).print()
 
         env.execute('kafkaread')
         env.close()
+
+class ReduceFunctionPerc(ReduceFunction):
+    def reduce(self, a, b):
+        a[3].update(b[1])
+        count = a[4]
+        if count < 5:
+            count += 1
+            return [a[0], a[1], a[2], a[3], count]
+        count += 1
+        return [a[0], a[3].p_estimate(), a[2], a[3], count]
+
+
 
 if __name__ == '__main__':
     kafkaread()
