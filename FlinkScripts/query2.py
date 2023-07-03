@@ -71,6 +71,7 @@ def kafkaread():
     
     ds1=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
           .map(func=csvToList)\
+          .assign_timestamps_and_watermarks(watermark)\
           .key_by(key_selector=lambda f:f[0])\
           .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
           .process(CountWindowProcessFunction())\
@@ -79,6 +80,7 @@ def kafkaread():
           .sink_to(sink1)
     ds2=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
         .map(func=csvToList)\
+        .assign_timestamps_and_watermarks(watermark)\
         .key_by(key_selector=lambda f:f[0])\
         .window(TumblingEventTimeWindows.of(Time.hours(1)))\
         .process(CountWindowProcessFunction())\
@@ -87,6 +89,7 @@ def kafkaread():
         .sink_to(sink2)
     ds3=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
         .map(func=csvToList)\
+        .assign_timestamps_and_watermarks(watermark)\
         .key_by(key_selector=lambda f:f[0])\
         .window(TumblingEventTimeWindows.of(Time.days(1)))\
         .process(CountWindowProcessFunction())\
