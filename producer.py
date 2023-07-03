@@ -71,6 +71,10 @@ def invio():
             p.flush
             #if float(row[41]) != 0.0:
                 #time.sleep(float(row[41])/(3600*1000))
+        rowFinal=['RigaFinale.END', 'E', '16-11-2021', '09:00:00.000', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0.0', '0.0', '09:00:00.000', '0.0', '', '16-11-2021', '', '', '', '', '', '', '09:00:00.000', '', '', '', '', '', '', '2021-11-16 09:00:00.000', '0.0']
+        p.poll(1)
+        p.produce('user',lint_to_string(rowFinal),callback=receipt)
+        p.flush
         csv_file.close()
 
 def main():

@@ -64,6 +64,9 @@ services:
     depends_on:
       - jobmanager
     command: taskmanager
+    volumes:
+       - ./FlinkScripts:/opt/flink-apps
+       - ./DockerFile/Flink:/data
     networks:
       - main_network
     scale: 1

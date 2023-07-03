@@ -1,6 +1,6 @@
 from confluent_kafka import Consumer
 ################
-c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumer','auto.offset.reset':'earliest'})
+c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumer2'})
 print('Kafka Consumer has been initiated...')
 
 print('Available topics to consume: ', c.list_topics().topics)
@@ -21,21 +21,19 @@ def main():
             print('Error: {}'.format(msg.error()))
             continue
         data=msg.value().decode('utf-8')
+        print(len(data))
         if msg.topic()=="resultQuery1-30minutes":
             file1.write(data+"\n")
             c1=c1+1
             print("30-minutes: ",c1)
-            file1.flush()
             continue
         if msg.topic()=="resultQuery1-1Days":
             file2.write(data+"\n")
             c2=c2+1
             print("1-days: ",c2)
-            file2.flush()
             continue
         if msg.topic()=="resultQuery1-Global":
-            file3.write(data+"\n")
-            file3.flush()
+            file3.write(data+"\n")  
             continue
     c.close()
     file1.close()
