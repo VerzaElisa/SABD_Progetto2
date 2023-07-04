@@ -18,20 +18,16 @@ def main():
             print('Error: {}'.format(msg.error()))
             continue
         data=msg.value().decode('utf-8')
+        print(data)
         if msg.topic()=="resultQuery2-30minutes":
             file1.write(data+"\n")
-            c1=c1+1
-            print("30-minutes: ",c1)
             file1.flush()
             continue
         if msg.topic()=="resultQuery2-1hour":
             file2.write(data+"\n")
-            c2=c2+1
-            print("1-days: ",c2)
             file2.flush()
             continue
         if msg.topic()== "resultQuery2-1day":
-            file3.write(data+"\n")
             file3.flush()
             continue
     c.close()

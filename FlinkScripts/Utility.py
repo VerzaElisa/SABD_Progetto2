@@ -17,6 +17,10 @@ def toString(f):
     return s
 
 
+def csvToList(f):
+    x=f.split(sep=",")
+    return [x[0],x[1],x[21],x[23],x[26]]
+
 class CountWindowProcessFunctionPerc(ProcessWindowFunction):    
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         x=sorted(elements, key=itemgetter(5))

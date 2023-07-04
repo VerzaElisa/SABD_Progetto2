@@ -3,7 +3,7 @@ import os
 import time, datetime
 from typing import Iterable
 from pyflink.datastream.functions import ProcessWindowFunction, ReduceFunction
-from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString, CountWindowProcessFunctionPerc
+from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString, csvToList ,CountWindowProcessFunctionPerc
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -32,24 +32,22 @@ class PercentileProcessFunction(ProcessWindowFunction):
 def my_map(obj):
     json_obj = json.loads(json.loads(obj))
     return json.dumps(json_obj["name"])
-def csvToList(f):
-    x=f.split(sep=",")
-    return x + [datetime.datetime.strptime(x[4]+'|'+x[3], format)]
 def toString(f):
     s=""
     for i in range(len(f)-1):
         s=s+str(f[i])+","
     s=s+str(f[len(f)-1])
     return s
-def kafkaread():
+def query3():
         env = StreamExecutionEnvironment.get_execution_environment()
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
         env.set_parallelism(1) 
         env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
+        env.add_python_file("file:///opt/flink-apps/Utility.py")
         #creazione della sorgente
         source = KafkaSource.builder() \
             .set_bootstrap_servers("kafka:29092") \
-            .set_topics("user2") \
+            .set_topics("user") \
             .set_group_id("flink") \
             .set_value_only_deserializer(SimpleStringSchema()) \
             .build()
@@ -83,16 +81,35 @@ def kafkaread():
             .set_record_serializer(record_serializer3)\
             .build()
         #inizio a creare il flusso dei dati comune
-        ds1=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+        ds=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
                 .map(func=csvToList)\
+                .filter(func=lambda f:f[4]!="" and f[3]!="00:00:00.000")\
+                .map(lambda f:f+[datetime.datetime.strptime(f[4]+'|'+f[3], format)])\
                 .assign_timestamps_and_watermarks(watermark)\
-                .key_by(key_selector=lambda f:f[0])\
-                .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
+                .key_by(key_selector=lambda f:f[0])
+
+        ds1= ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
                 .process(CountWindowProcessFunctionPerc())\
                 .key_by(lambda f:f[0].split(sep=".")[1])\
-                .reduce(ReduceFunctionPerc()).print()
-
-        env.execute('kafkaread')
+                .reduce(ReduceFunctionPerc())\
+                .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
+                .map(lambda f:toString(f),output_type=Types.STRING())\
+                .sink_to(sink1)
+        ds2= ds.window(TumblingEventTimeWindows.of(Time.hours(1)))\
+                .process(CountWindowProcessFunctionPerc())\
+                .key_by(lambda f:f[0].split(sep=".")[1])\
+                .reduce(ReduceFunctionPerc())\
+                .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
+                .map(lambda f:toString(f),output_type=Types.STRING())\
+                .sink_to(sink2)
+        ds3= ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
+                .process(CountWindowProcessFunctionPerc())\
+                .key_by(lambda f:f[0].split(sep=".")[1])\
+                .reduce(ReduceFunctionPerc())\
+                .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
+                .map(lambda f:toString(f),output_type=Types.STRING())\
+                .sink_to(sink3)
+        env.execute('query3')
         env.close()
 
 class ReduceFunctionPerc(ReduceFunction):
@@ -107,7 +124,5 @@ class ReduceFunctionPerc(ReduceFunction):
         count += 1
         return [a[0], a[1], a[2], a[3], a[4], a[5], count, a[3].p_estimate(), a[4].p_estimate(), a[5].p_estimate()]
 
-
-
 if __name__ == '__main__':
-    kafkaread()
+    query3()

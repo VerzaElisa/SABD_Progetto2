@@ -18,7 +18,7 @@ def main():
             print('Error: {}'.format(msg.error()))
             continue
         data=msg.value().decode('utf-8')
-        print(len(data))
+        print(data)
         if msg.topic()=="resultQuery3-30minutes":
             file1.write(data+"\n")
             continue

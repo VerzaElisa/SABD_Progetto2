@@ -2,9 +2,8 @@ import json
 import os
 import time, datetime
 from typing import Iterable
-from FirstElementTimestampAssigner import FirstElementTimestampAssigner
 from operator import itemgetter
-from Utility import OurTimestampAssigner, CountWindowProcessFunction, Chart
+from Utility import OurTimestampAssigner, CountWindowProcessFunction, Chart, csvToList, toString
 
 
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration
@@ -25,17 +24,13 @@ from pyflink.datastream import StreamExecutionEnvironment, ProcessWindowFunction
 
 format = "%d-%m-%Y|%H:%M:%S.%f"
 
-def csvToList(f):
-    x=f.split(sep=",")
-    return x + [datetime.datetime.strptime(x[4]+'|'+x[3], format)]
-
-def kafkaread():
+def query2():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(1)
     env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
-    
+    env.add_python_file("file:///opt/flink-apps/Utility.py")
     source = KafkaSource.builder().set_bootstrap_servers("kafka:29092") \
-                                  .set_topics("user2") \
+                                  .set_topics("user") \
                                   .set_group_id("query2") \
                                   .set_value_only_deserializer(SimpleStringSchema()) \
                                   .build()
@@ -69,36 +64,33 @@ def kafkaread():
         .build()
 
     
-    ds1=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
+    ds=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
           .map(func=csvToList)\
+          .filter(func=lambda f:f[4]!="" and f[3]!="00:00:00.000")\
+          .map(lambda f:f+[datetime.datetime.strptime(f[4]+'|'+f[3], format)])\
           .assign_timestamps_and_watermarks(watermark)\
-          .key_by(key_selector=lambda f:f[0])\
-          .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
+          .key_by(key_selector=lambda f:f[0])
+    ds1=  ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
           .process(CountWindowProcessFunction())\
           .window_all(TumblingEventTimeWindows.of(Time.minutes(30)))\
           .process(Chart())\
+          .map(lambda f:toString(f),output_type=Types.STRING())\
           .sink_to(sink1)
-    ds2=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
-        .map(func=csvToList)\
-        .assign_timestamps_and_watermarks(watermark)\
-        .key_by(key_selector=lambda f:f[0])\
-        .window(TumblingEventTimeWindows.of(Time.hours(1)))\
+    
+    ds2=ds.window(TumblingEventTimeWindows.of(Time.hours(1)))\
         .process(CountWindowProcessFunction())\
         .window_all(TumblingEventTimeWindows.of(Time.hours(1)))\
         .process(Chart())\
+        .map(lambda f:toString(f),output_type=Types.STRING())\
         .sink_to(sink2)
-    ds3=env.from_source(source, WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
-        .map(func=csvToList)\
-        .assign_timestamps_and_watermarks(watermark)\
-        .key_by(key_selector=lambda f:f[0])\
-        .window(TumblingEventTimeWindows.of(Time.days(1)))\
+    ds3=ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
         .process(CountWindowProcessFunction())\
         .window_all(TumblingEventTimeWindows.of(Time.days(1)))\
         .process(Chart())\
+        .map(lambda f:toString(f),output_type=Types.STRING())\
         .sink_to(sink3)
-
-    env.execute('kafkaread')
+    env.execute('query2')
     env.close()
     
 if __name__ == '__main__':
-    kafkaread()
+    query2()

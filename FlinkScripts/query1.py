@@ -1,7 +1,7 @@
 import json
 import os
 import time, datetime
-from Utility import OurTimestampAssigner, toString ,queryADDTimestamp
+from Utility import OurTimestampAssigner, toString ,queryADDTimestamp, csvToList
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -14,10 +14,6 @@ from pyflink.datastream.time_characteristic import TimeCharacteristic
 def my_map(obj):
     json_obj = json.loads(json.loads(obj))
     return json.dumps(json_obj["name"])
-
-def csvToList(f):
-    x=f.split(sep=",")
-    return [x[0],x[1],x[21],x[23],x[26]]
 
 def query1():
         env = StreamExecutionEnvironment.get_execution_environment()
@@ -74,7 +70,7 @@ def query1():
         #separo per le tre finestre temporali
         ds1 = ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
             .reduce(lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])),queryADDTimestamp())\
-            .map(func=lambda f:toString([f[0]]+f[1].split(sep="|")+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
+            .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink1)
         '''
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
@@ -86,7 +82,7 @@ def query1():
             .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
             .sink_to(sink3)
         '''
-        env.execute('kafkaread')
+        env.execute('query1')
         env.close()
 
 if __name__ == '__main__':
