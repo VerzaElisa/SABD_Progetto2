@@ -2,14 +2,11 @@ import csv
 import os
 import time
 from confluent_kafka import Producer
-from faker import Faker
 from datetime import datetime
 import logging
 import pandas as pd
 import numpy as np
 
-
-fake=Faker()
 
 logging.basicConfig(format='%(asctime)s %(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -66,15 +63,14 @@ def invio():
     with open("dataset.csv") as csv_file:
         reader = csv.reader(csv_file)
         for row in reader:
-            p.poll(1)
+            print(row)
             p.produce('user',lint_to_string(row),callback=receipt)
-            p.flush
-            #if float(row[41]) != 0.0:
-                #time.sleep(float(row[41])/(3600*1000))
+            if row[41]!="" and float(row[41]) != 0.0:
+                p.flush()
+                time.sleep(float(row[41])/(3600*1000/4)) #1 ora = 4sec circ
         rowFinal=['RigaFinale.END', 'E', '16-11-2021', '09:00:00.000', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '0.0', '0.0', '09:00:00.000', '0.0', '', '16-11-2021', '', '', '', '', '', '', '09:00:00.000', '', '', '', '', '', '', '2021-11-16 09:00:00.000', '0.0']
-        p.poll(1)
         p.produce('user',lint_to_string(rowFinal),callback=receipt)
-        p.flush
+        p.flush()
         csv_file.close()
 
 def main():

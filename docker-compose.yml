@@ -61,6 +61,8 @@ services:
         jobmanager.rpc.address: jobmanager             
   taskmanager:
     image: flink:latest
+    container_name: flink_worker
+    hostname: flink_worker
     depends_on:
       - jobmanager
     command: taskmanager
