@@ -4,7 +4,7 @@ c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumerQuer
 print('Kafka Consumer has been initiated...')
 
 print('Available topics to consume: ', c.list_topics().topics)
-c.subscribe(['resultQuery3-30minutes','resultQuery3-1hour','resultQuery3-1Days'])
+c.subscribe(['resultQuery3-30minutes','resultQuery3-1hour','resultQuery3-1day'])
 ################
 def main():
     file1=open("../Result/Query3/ResultQuery3-30minutes.csv","w")

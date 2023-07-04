@@ -48,7 +48,7 @@ def query3():
         source = KafkaSource.builder() \
             .set_bootstrap_servers("kafka:29092") \
             .set_topics("user") \
-            .set_group_id("flink") \
+            .set_group_id("query3") \
             .set_value_only_deserializer(SimpleStringSchema()) \
             .build()
         #creazione del watermark per lo scorrimento del tempo in base agli aventi

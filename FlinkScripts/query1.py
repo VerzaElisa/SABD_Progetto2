@@ -25,7 +25,7 @@ def query1():
         source = KafkaSource.builder() \
             .set_bootstrap_servers("kafka:29092") \
             .set_topics("user") \
-            .set_group_id("flink") \
+            .set_group_id("query1") \
             .set_value_only_deserializer(SimpleStringSchema()) \
             .build()
         #creazione del watermark per lo scorrimento del tempo in base agli aventi
@@ -72,7 +72,6 @@ def query1():
             .reduce(lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink1)
-        '''
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
@@ -81,7 +80,7 @@ def query1():
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
             .sink_to(sink3)
-        '''
+
         env.execute('query1')
         env.close()
 
