@@ -38,5 +38,5 @@ bash avvio_topic.sh
 
 echo "inizio setup NIFI"
 cd ScriptSetUpNIFI
-bash LogIn.sh
+#bash LogIn.sh
 cd ..
