@@ -4,15 +4,12 @@ c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumer2'})
 print('Kafka Consumer has been initiated...')
 
 print('Available topics to consume: ', c.list_topics().topics)
-c.subscribe(['resultQuery1-30minutes','resultQuery1-1Days'])
+c.subscribe(['resultQuery3-30minutes','resultQuery3-1hour','resultQuery3-1Days'])
 ################
 def main():
-    c1=0
-    c2=0
-    c3=0
-    file1=open("./Result/Query1/ResultQuery1-30minutes.csv","w")
-    file2=open("./Result/Query1/ResultQuery1-1days.csv","w")
-    file3=open("./Result/Query1/ResultQuery1-global.csv","w")
+    file1=open("./Result/Query3/ResultQuery3-30minutes.csv","w")
+    file2=open("./Result/Query3/ResultQuery3-1days.csv","w")
+    file3=open("./Result/Query3/ResultQuery3-1hour.csv","w")
     while True:
         msg=c.poll(1.0) #timeout
         if msg is None:
@@ -22,17 +19,13 @@ def main():
             continue
         data=msg.value().decode('utf-8')
         print(len(data))
-        if msg.topic()=="resultQuery1-30minutes":
+        if msg.topic()=="resultQuery3-30minutes":
             file1.write(data+"\n")
-            c1=c1+1
-            print("30-minutes: ",c1)
             continue
-        if msg.topic()=="resultQuery1-1Days":
+        if msg.topic()=="resultQuery3-1hour":
             file2.write(data+"\n")
-            c2=c2+1
-            print("1-days: ",c2)
             continue
-        if msg.topic()=="resultQuery1-Global":
+        if msg.topic()=="resultQuery3-1Day":
             file3.write(data+"\n")  
             continue
     c.close()
