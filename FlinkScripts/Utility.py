@@ -59,3 +59,9 @@ class ReduceFunctionMax(ReduceFunction):
             return a[0], a[1], a[2], a[3], a[4]
         else:
             return b[0], b[1], b[2], b[3], b[4]
+class queryADDTimestamp(ProcessWindowFunction):
+    def process(self,key,context,elements):
+        elements_out=[]
+        for e in elements:
+            elements_out.append([context.window().start]+list(e))
+        return elements_out

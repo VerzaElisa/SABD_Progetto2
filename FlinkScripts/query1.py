@@ -1,7 +1,7 @@
 import json
 import os
 import time, datetime
-from Utility import OurTimestampAssigner, toString
+from Utility import OurTimestampAssigner, toString ,queryADDTimestamp
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -17,9 +17,9 @@ def my_map(obj):
 
 def csvToList(f):
     x=f.split(sep=",")
-    return x
+    return [x[0],x[1],x[21],x[23],x[26]]
 
-def kafkaread():
+def query1():
         env = StreamExecutionEnvironment.get_execution_environment()
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
         env.set_parallelism(1) 
@@ -28,7 +28,7 @@ def kafkaread():
         #creazione della sorgente
         source = KafkaSource.builder() \
             .set_bootstrap_servers("kafka:29092") \
-            .set_topics("user2") \
+            .set_topics("user") \
             .set_group_id("flink") \
             .set_value_only_deserializer(SimpleStringSchema()) \
             .build()
@@ -64,16 +64,19 @@ def kafkaread():
         #inizio a creare il flusso dei dati comune
         ds=env.from_source(source,WatermarkStrategy.for_monotonous_timestamps(), "Kafka Source")\
             .map(func=csvToList)\
+            .filter(func=lambda f:f[4]!="" and f[3]!="00:00:00.000")\
             .assign_timestamps_and_watermarks(watermark)\
             .filter(func=lambda f:f[0].endswith(".FR"))\
             .filter(func=lambda f:f[1]=='E')\
+            .filter(func=lambda f:f[0].startswith("G"))\
             .map(func=lambda f:(f[0]+"|"+f[4]+"|"+f[3].split(sep=":")[0],(1,float(f[2]))))\
             .key_by(key_selector=lambda f:f[0])
         #separo per le tre finestre temporali
         ds1 = ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
-            .reduce(lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
-            .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
+            .reduce(lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])),queryADDTimestamp())\
+            .map(func=lambda f:toString([f[0]]+f[1].split(sep="|")+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink1)
+        '''
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
@@ -82,8 +85,9 @@ def kafkaread():
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString(f[0].split(sep="|")+[f[1][1]/f[1][0],f[1][0]]),output_type=Types.STRING())\
             .sink_to(sink3)
+        '''
         env.execute('kafkaread')
         env.close()
 
 if __name__ == '__main__':
-    kafkaread()
+    query1()
