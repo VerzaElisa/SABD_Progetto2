@@ -17,10 +17,16 @@ def toString(f):
     return s
 
 
+class CountWindowProcessFunctionPerc(ProcessWindowFunction):    
+    def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
+        x=sorted(elements, key=itemgetter(5))
+#               |id     | variazione                   | timestamp             | PSquare-25 | PSquare-50 | PSquare-75 | counter | 25-esimo | 50-esimo | 75-esimo  |
+        return [[x[0][0],float(x[-1][2])-float(x[0][2]), context.window().start, PSquare(25), PSquare(50), PSquare(75), 0       , ''       , ''       , ''        ]]
+
 class CountWindowProcessFunction(ProcessWindowFunction):    
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         x=sorted(elements, key=itemgetter(5))
-        return [[x[0][0],float(x[-1][2])-float(x[0][2]),context.window().start, PSquare(25), 0]]
+        return [[x[0][0],float(x[-1][2])-float(x[0][2]),context.window().start]]
 
 class Chart(ProcessAllWindowFunction):
     def process(self, ctx, elements):

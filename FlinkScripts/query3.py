@@ -3,7 +3,7 @@ import os
 import time, datetime
 from typing import Iterable
 from pyflink.datastream.functions import ProcessWindowFunction, ReduceFunction
-from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString
+from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString, CountWindowProcessFunctionPerc
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -88,7 +88,7 @@ def kafkaread():
                 .assign_timestamps_and_watermarks(watermark)\
                 .key_by(key_selector=lambda f:f[0])\
                 .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
-                .process(CountWindowProcessFunction())\
+                .process(CountWindowProcessFunctionPerc())\
                 .key_by(lambda f:f[0].split(sep=".")[1])\
                 .reduce(ReduceFunctionPerc()).print()
 
@@ -98,12 +98,14 @@ def kafkaread():
 class ReduceFunctionPerc(ReduceFunction):
     def reduce(self, a, b):
         a[3].update(b[1])
-        count = a[4]
+        a[4].update(b[1])
+        a[5].update(b[1])
+        count = a[6]
         if count < 5:
             count += 1
-            return [a[0], a[1], a[2], a[3], count]
+            return [a[0], a[1], a[2], a[3], a[4], a[5], count, '', '', '']
         count += 1
-        return [a[0], a[3].p_estimate(), a[2], a[3], count]
+        return [a[0], a[1], a[2], a[3], a[4], a[5], count, a[3].p_estimate(), a[4].p_estimate(), a[5].p_estimate()]
 
 
 
