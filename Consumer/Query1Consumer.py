@@ -7,9 +7,9 @@ print('Available topics to consume: ', c.list_topics().topics)
 c.subscribe(['resultQuery1-30minutes','resultQuery1-1Days','resultQuery1-Global'])
 ################
 def main():
-    file1=open("./Result/Query1/ResultQuery1-30minutes.csv","w")
-    file2=open("./Result/Query1/ResultQuery1-1days.csv","w")
-    file3=open("./Result/Query1/ResultQuery1-global.csv","w")
+    file1=open("../Result/Query1/ResultQuery1-30minutes.csv","w")
+    file2=open("../Result/Query1/ResultQuery1-1days.csv","w")
+    file3=open("../Result/Query1/ResultQuery1-global.csv","w")
     while True:
         msg=c.poll(1.0) #timeout
         if msg is None:
@@ -18,7 +18,7 @@ def main():
             print('Error: {}'.format(msg.error()))
             continue
         data=msg.value().decode('utf-8')
-        print(len(data))
+        print(data)
         if msg.topic()=="resultQuery1-30minutes":
             file1.write(data+"\n")
             continue
