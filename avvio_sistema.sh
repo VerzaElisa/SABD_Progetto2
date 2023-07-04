@@ -25,13 +25,19 @@ then
 else
      echo "Download file sql"
      wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/1.17.1/flink-sql-connector-kafka-1.17.1.jar
+     echo "Prometeus file jar"
+     wget  
 fi
 cd ..
 docker compose build
 docker compose up -d
 echo "inizio setup Flink"
 docker exec -it flink sh /data/setup.sh
-docker exec -it flink_worker sh /data/setup.sh
+docker exec -it flink_worker1 sh /data/setup.sh
+docker exec -it flink_worker2 sh /data/setup.sh
+docker exec -it flink_worker3 sh /data/setup.sh
+
+
 
 echo "inizio setup Kafka Topic"
 bash avvio_topic.sh

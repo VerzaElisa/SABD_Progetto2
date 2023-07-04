@@ -16,19 +16,6 @@ from pyflink.datastream.time_characteristic import TimeCharacteristic
 from psquare.psquare import PSquare
 format = "%d-%m-%Y|%H:%M:%S.%f"
 
-
-class PercentileProcessFunction(ProcessWindowFunction):
-    def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
-        percentile25 = PSquare(25)
-        percentile50 = PSquare(50)
-        percentile75 = PSquare(75)
-        for e in elements:
-            percentile25.update(e[1])
-            percentile50.update(e[1])
-            percentile75.update(e[1])
-        if len(elements)>5:
-            return [[datetime.datetime.fromtimestamp(context.window().start/1000),key,len(elements),percentile25.p_estimate(),percentile50.p_estimate(),percentile75.p_estimate()]]
-        return []
 def my_map(obj):
     json_obj = json.loads(json.loads(obj))
     return json.dumps(json_obj["name"])
@@ -91,6 +78,7 @@ def query3():
         ds1= ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
                 .process(CountWindowProcessFunctionPerc())\
                 .key_by(lambda f:f[0].split(sep=".")[1])\
+                .window(TumblingEventTimeWindows.of(Time.minutes(30)))\
                 .reduce(ReduceFunctionPerc())\
                 .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
                 .map(lambda f:toString(f),output_type=Types.STRING())\
@@ -98,6 +86,7 @@ def query3():
         ds2= ds.window(TumblingEventTimeWindows.of(Time.hours(1)))\
                 .process(CountWindowProcessFunctionPerc())\
                 .key_by(lambda f:f[0].split(sep=".")[1])\
+                .window(TumblingEventTimeWindows.of(Time.hours(1)))\
                 .reduce(ReduceFunctionPerc())\
                 .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
                 .map(lambda f:toString(f),output_type=Types.STRING())\
@@ -105,6 +94,7 @@ def query3():
         ds3= ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
                 .process(CountWindowProcessFunctionPerc())\
                 .key_by(lambda f:f[0].split(sep=".")[1])\
+                .window(TumblingEventTimeWindows.of(Time.days(1)))\
                 .reduce(ReduceFunctionPerc())\
                 .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
                 .map(lambda f:toString(f),output_type=Types.STRING())\
