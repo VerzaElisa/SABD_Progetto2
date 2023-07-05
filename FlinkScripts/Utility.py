@@ -1,4 +1,5 @@
 import datetime
+import time
 from typing import Iterable
 from operator import itemgetter
 from pyflink.datastream.window import TimeWindow
@@ -20,7 +21,17 @@ def toString(f):
 def csvToList(f):
     x=f.split(sep=",")
     return [x[0],x[1],x[21],x[23],x[26]]
+class ReduceFunctionQuery1(ReduceFunction):
+    def open(self,ctx):
+        self.start=time.time()
+    def reduce(self,a,b):
+        return [b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])]
+    def close(self):
+        latency = time.time()-self.start
+        print("latency: ",latency)
+        return
 
+        
 class CountWindowProcessFunctionPerc(ProcessWindowFunction):    
     def process(self, key: str, context: ProcessWindowFunction.Context[TimeWindow], elements: Iterable[tuple]):
         x=sorted(elements, key=itemgetter(5))

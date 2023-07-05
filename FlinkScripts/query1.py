@@ -1,7 +1,7 @@
 import json
 import os
 import time, datetime
-from Utility import OurTimestampAssigner, toString ,queryADDTimestamp, csvToList
+from Utility import OurTimestampAssigner, toString ,queryADDTimestamp, csvToList, ReduceFunctionQuery1
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -69,10 +69,10 @@ def query1():
             .key_by(key_selector=lambda f:f[0])
         #separo per le tre finestre temporali
         ds1 = ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
-            .reduce(lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])),queryADDTimestamp())\
+            .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink1)
-    
+        '''
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
@@ -81,6 +81,7 @@ def query1():
             .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink3)
+        '''
         env.execute('query1')
         env.close()
 
