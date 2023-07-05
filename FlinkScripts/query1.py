@@ -72,16 +72,14 @@ def query1():
             .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink1)
-        '''
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
-            .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
+            .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink2)
         ds3 = ds.window(TumblingEventTimeWindows.of(Time.days(6)))\
-            .reduce(reduce_function=lambda a,b:(b[0],(a[1][0]+b[1][0],a[1][1]+b[1][1])))\
+            .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink3)
-        '''
         env.execute('query1')
         env.close()
 
