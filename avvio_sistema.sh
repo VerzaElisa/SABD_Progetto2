@@ -30,24 +30,26 @@ else
      wget  
 fi
 cd ..
-cd ./DockerFile/Grafana/
-docker build -t grafkob .
+# cd ./DockerFile/Grafana/
+# docker build -t grafkob .
+# cd ../..
+cd ./DockerFile/Spark/
+docker build -t cluster-apache-spark:3.0.2 .
 cd ../..
-
 docker compose build
 docker compose up -d
-echo "inizio setup Flink"
-docker exec -it flink sh /data/setup.sh
-docker exec -it flink_worker1 sh /data/setup.sh
-docker exec -it flink_worker2 sh /data/setup.sh
-docker exec -it flink_worker3 sh /data/setup.sh
+# echo "inizio setup Flink"
+# docker exec -it flink sh /data/setup.sh
+# docker exec -it flink_worker1 sh /data/setup.sh
+# docker exec -it flink_worker2 sh /data/setup.sh
+# docker exec -it flink_worker3 sh /data/setup.sh
 
 
 
 echo "inizio setup Kafka Topic"
 bash avvio_topic.sh
 
-echo "inizio setup NIFI"
-cd ScriptSetUpNIFI
-#bash LogIn.sh
-cd ..
+# echo "inizio setup NIFI"
+# cd ScriptSetUpNIFI
+# #bash LogIn.sh
+# cd ..
