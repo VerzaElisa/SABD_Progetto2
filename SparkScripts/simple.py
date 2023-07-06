@@ -6,8 +6,8 @@ from pyspark import SparkContext
 KAFKA_TOPIC_NAME = "user"
 KAFKA_SINK_TOPIC = "sinkTopic"
 KAFKA_BOOTSTRAP_SERVERS = "kafka:29092"
-# CHECKPOINT_LOCATION = "LOCAL DIRECTORY LOCATION (FOR DEBUGGING PURPOSES)"
-#CHECKPOINT_LOCATION = "/Users/aman.parmar/Documents/DATA_SCIENCE/KAFKA/CHECKPOINT"
+#CHECKPOINT_LOCATION = "LOCAL DIRECTORY LOCATION (FOR DEBUGGING PURPOSES)"
+CHECKPOINT_LOCATION = "./CHECKPOINT"
 sample_schema = (
         StructType()
         .add("id", StringType())
@@ -54,13 +54,26 @@ if __name__ == "__main__":
                     df3.SecType,
                     df3.Value,
                     to_timestamp(df3.timestamp,"dd-MM-yyyy HH:mm:ss.SSS").alias("my_timestamp")
-                    )               
-    tumblingWindows = df3.where(df3.SecType=="E")
-                         .withWatermark("my_timestamp", "30 minutes").groupBy("ID", window("my_timestamp", "30 minutes")).
+                    ) 
+    #Inizio Query1              
+    tumblingWindows = df3.where(df3.SecType=="E")\
+                        .filter(df3.ID.startswith('G'))\
+                        .filter(df3.ID.endswith('FR'))\
+                        .withWatermark("my_timestamp","10 minutes")\
+                        .groupBy("ID",window("my_timestamp", "30 minutes"))\
+                        .count()
+    tumblingWindows = tumblingWindows.select([col(c).cast("string") for c in tumblingWindows.columns])
+    tumblingWindows = tumblingWindows.select(concat(concat(tumblingWindows.ID,lit(",")),tumblingWindows.window).alias("value"))
+
+    print(tumblingWindows.schema)
+
     tumblingWindows.writeStream \
-                   .format("console") \
-                   .start()\
-                   .awaitTermination()
+                    .format("kafka") \
+                    .option("kafka.bootstrap.servers", "kafka:29092") \
+                    .option("topic", "spark")\
+                    .option("checkpointLocation",CHECKPOINT_LOCATION)\
+                    .start()\
+                    .awaitTermination()
 
 
     
