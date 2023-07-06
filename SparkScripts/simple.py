@@ -35,12 +35,16 @@ if __name__ == "__main__":
         .load()
     )
     base_df = sampleDataframe.selectExpr("CAST(value as STRING)")
-    data_stream = ssc.queueStream([base_df.toPandas().values.tolist()])
-    data_stream.pprint()
-    ssc.start()
-    ssc.awaitTermination()
+     
+    df2= base_df.select(split(base_df.value,",")[0].alias("ID"),
+                        split(base_df.value,",")[1].alias("SecType"),
+                        split(base_df.value,",")[21].asType().alias("Value"),
+                        split(base_df.value,",")[23].alias("Ora"),
+                        split(base_df.value,",")[26].alias("Data"),
+                        )
+    print(df2.schema)
     #tumblingWindows = base_df.withWatermark("timestamp", "30 minutes").groupBy("id", window("timestamp", "30 minutes")).count()
-    data_stream.writeStream \
+    df2.writeStream \
                    .format("console") \
                    .start()\
                    .awaitTermination()
