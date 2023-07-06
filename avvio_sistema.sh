@@ -33,8 +33,11 @@ cd ..
 # cd ./DockerFile/Grafana/
 # docker build -t grafkob .
 # cd ../..
-cd ./DockerFile/Spark/
-docker build -t cluster-apache-spark:3.0.2 .
+# cd ./DockerFile/Spark/
+# docker build -t cluster-apache-spark:3.0.2 .
+# cd ../..
+cd ./DockerFile/SparkBITNAMI/
+docker build -t kobspark .
 cd ../..
 docker compose build
 docker compose up -d

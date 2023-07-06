@@ -1,4 +1,6 @@
 from confluent_kafka import Consumer
+import Time
+
 ################
 c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumerQuery1','auto.offset.reset':'latest'})
 print('Kafka Consumer has been initiated...')
@@ -10,7 +12,8 @@ def main():
     file1=open("../Result/Query1/ResultQuery1-30minutes.csv","w")
     file2=open("../Result/Query1/ResultQuery1-1days.csv","w")
     file3=open("../Result/Query1/ResultQuery1-global.csv","w")
-    while True:
+    start=Time.time()
+    while Time.time()-start<3*60*1000:   #3minuti
         msg=c.poll(1.0) #timeout
         if msg is None:
             continue
@@ -18,15 +21,18 @@ def main():
             print('Error: {}'.format(msg.error()))
             continue
         data=msg.value().decode('utf-8')
-        print(data)
+        start=Time.time()
         if msg.topic()=="resultQuery1-30minutes":
             file1.write(data+"\n")
+            file1.flush()
             continue
         if msg.topic()=="resultQuery1-1Days":
             file2.write(data+"\n")
+            file2.flush()
             continue
         if msg.topic()=="resultQuery1-Global":
             file3.write(data+"\n")  
+            file3.flush()
             continue
     c.close()
     file1.close()
