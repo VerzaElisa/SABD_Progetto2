@@ -42,9 +42,22 @@ if __name__ == "__main__":
                         split(base_df.value,",")[23].alias("Ora"),
                         split(base_df.value,",")[26].alias("Data"),
                         )
-    print(df2.schema)
-    #tumblingWindows = base_df.withWatermark("timestamp", "30 minutes").groupBy("id", window("timestamp", "30 minutes")).count()
-    df2.writeStream \
+    df3= df2.where(df2.Ora != "00:00:00.000")\
+            .where(df2.Data!="")\
+            .select(df2.ID,
+                    df2.SecType,
+                    df2.Value,
+                    concat(concat(df2.Data,lit(" ")).alias("Data"),df2.Ora).alias("timestamp")
+                    )
+    df3 = df3.select(
+                    df3.ID,
+                    df3.SecType,
+                    df3.Value,
+                    to_timestamp(df3.timestamp,"dd-MM-yyyy HH:mm:ss.SSS").alias("my_timestamp")
+                    )               
+    tumblingWindows = df3.where(df3.SecType=="E")
+                         .withWatermark("my_timestamp", "30 minutes").groupBy("ID", window("my_timestamp", "30 minutes")).
+    tumblingWindows.writeStream \
                    .format("console") \
                    .start()\
                    .awaitTermination()
