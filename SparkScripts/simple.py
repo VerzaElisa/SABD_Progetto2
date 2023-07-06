@@ -38,7 +38,7 @@ if __name__ == "__main__":
      
     df2= base_df.select(split(base_df.value,",")[0].alias("ID"),
                         split(base_df.value,",")[1].alias("SecType"),
-                        split(base_df.value,",")[21].asType().alias("Value"),
+                        split(base_df.value,",")[21].alias("Value").astype(FloatType()),
                         split(base_df.value,",")[23].alias("Ora"),
                         split(base_df.value,",")[26].alias("Data"),
                         )
