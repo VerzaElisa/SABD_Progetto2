@@ -77,7 +77,7 @@ if __name__ == "__main__":
     tumblingWindows30minutes.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \
-                     .option("topic", "spark")\
+                     .option("topic", "spark-30minutes")\
                      .option("checkpointLocation",CHECKPOINT_LOCATION)\
                      .start()\
                      .awaitTermination()
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     tumblingWindows1Days.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \
-                     .option("topic", "spark")\
+                     .option("topic", "spark-1day")\
                      .option("checkpointLocation",CHECKPOINT_LOCATION)\
                      .start()\
                      .awaitTermination()
@@ -129,7 +129,7 @@ if __name__ == "__main__":
     tumblingWindowsGlobal.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \
-                     .option("topic", "spark")\
+                     .option("topic", "spark-Global")\
                      .option("checkpointLocation",CHECKPOINT_LOCATION)\
                      .start()\
                      .awaitTermination()

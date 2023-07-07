@@ -43,16 +43,6 @@ services:
       - 8443:8443
     networks:
       - main_network 
-  grafana:
-    container_name: grafana
-    image: grafkob
-    tty: true
-    ports:
-      - 3000:3000
-#    volumes:
-#      - ./grafana_data:/var/lib/grafana
-    networks:
-      - main_network
   jobmanager:
     container_name: flink
     hostname: flink
@@ -105,24 +95,24 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2   
-  # taskmanager3:
-  #   image: flink:latest
-  #   container_name: flink_worker3
-  #   hostname: flink_worker3
-  #   depends_on:
-  #     - jobmanager
-  #   command: taskmanager
-  #   volumes:
-  #      - ./FlinkScripts:/opt/flink-apps
-  #      - ./DockerFile/Flink:/data
-  #   networks:
-  #     - main_network
-  #   scale: 1
-  #   environment:
-  #     - |
-  #       FLINK_PROPERTIES=
-  #       jobmanager.rpc.address: jobmanager
-  #       taskmanager.numberOfTaskSlots: 2   
+  taskmanager3:
+    image: flink:latest
+    container_name: flink_worker3
+    hostname: flink_worker3
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    volumes:
+       - ./FlinkScripts:/opt/flink-apps
+       - ./DockerFile/Flink:/data
+    networks:
+      - main_network
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2   
   
 
   spark:
@@ -138,6 +128,7 @@ services:
        - ./SparkScripts:/opt/spark-apps
     ports:
       - '8080:8080'
+      - '4040:4040'
     networks:
       - main_network
   spark-worker-1:

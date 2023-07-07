@@ -1,12 +1,20 @@
 #! /bin/bash
 name="apache-flink*.tar.gz"
 nameSql="flink-sql-connector-kafka-1.17.1.jar"
-
+dataset="out600_combined+header.csv"
 docker compose down
+
+ls -l $dataset > /dev/null
+if [ "$?" -eq "0" ]
+then
+     echo "File già esistenti"
+else
+     echo "Download Dataset"
+     wget http://www.ce.uniroma2.it/courses/sabd2223/project/out600_combined+header.csv
+fi
 
 cd ./DockerFile/Flink
 ls -l $name > /dev/null
- 
 if [ "$?" -eq "0" ]
 then
      echo "File già esistenti"
@@ -30,24 +38,16 @@ else
      wget  
 fi
 cd ..
-# cd ./DockerFile/Grafana/
-# docker build -t grafkob .
-# cd ../..
-# cd ./DockerFile/Spark/
-# docker build -t cluster-apache-spark:3.0.2 .
-# cd ../..
 cd ./DockerFile/SparkBITNAMI/
 docker build -t kobspark .
 cd ../..
 docker compose build
 docker compose up -d
-# echo "inizio setup Flink"
-# docker exec -it flink sh /data/setup.sh
-# docker exec -it flink_worker1 sh /data/setup.sh
-# docker exec -it flink_worker2 sh /data/setup.sh
-# docker exec -it flink_worker3 sh /data/setup.sh
-
-
+echo "inizio setup Flink"
+docker exec -it flink sh /data/setup.sh
+docker exec -it flink_worker1 sh /data/setup.sh
+docker exec -it flink_worker2 sh /data/setup.sh
+docker exec -it flink_worker3 sh /data/setup.sh
 
 echo "inizio setup Kafka Topic"
 bash avvio_topic.sh
