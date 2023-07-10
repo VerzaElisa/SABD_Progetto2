@@ -33,16 +33,16 @@ Questo permette l'avvio del sistema, in particolare,vengono avviati:
 - 1 container per Nifi
 Lo script si occupa di scaricare anche tutti i file necessari per la computazione, di creare autonomamente i topic su kafka, di instanziare e avviare i processori di Nifi e di avviare come ultima cosa il producer che permette la simulazione dell'invio delle tuple poco alla volta.<br>
 Per avviare la computazione di Flink bisogna eseguire il comando:
-'''
+```
 sh avvio_processamento -x <Nifi/Not>
-'''
+```
 che permette di instanziare i tre job Flink per elaborare le query, il flag -x indica se l'elaborazione deve includere il preprocessamento o meno di default il preprocessamento é disabilitato<br>
 ## Consumer
 Nella cartella Consumer sono inseriti script python per riportare i dati elaborati dalle 3 query su file csv <br>
 Per avviare un consumer bisogna:
-'''
+```
 cd Consumer
 python3 Query*Consumer.py
-'''
+```
 e sostituire * con il numero della query che si vuole avviare.
 
