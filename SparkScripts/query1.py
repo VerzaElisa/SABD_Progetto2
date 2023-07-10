@@ -54,7 +54,7 @@ if __name__ == "__main__":
                     df3.SecType,
                     df3.Value,
                     to_timestamp(df3.timestamp,"dd-MM-yyyy HH:mm:ss.SSS").alias("my_timestamp")
-                    ).cache() 
+                    ) 
     #Inizio Query1-finestra 1 ora              
     tumblingWindows1hour = df3.where(df3.SecType=="E")\
                         .filter(df3.ID.startswith('G'))\
@@ -69,9 +69,14 @@ if __name__ == "__main__":
                                 tumblingWindows1hour["count(Value)"].alias("Count"),
                         )
     tumblingWindows1hour = tumblingWindows1hour.select([col(c).cast("string") for c in tumblingWindows1hour.columns])
-    tumblingWindows1hour.writeStream \
-                     .format("kafka") \
-                     .option("kafka.bootstrap.servers", "kafka:29092") \
+    tumblingWindows1hour.writeStream\
+                     .format("console")\
+                     .start()\
+                     .awaitTermination()
+    '''
+    tumblingWindows1hour.writeStream\
+                     .format("kafka")\
+                     .option("kafka.bootstrap.servers", "kafka:29092")\
                      .option("topic", "spark-1hour")\
                      .option("checkpointLocation",CHECKPOINT_LOCATION)\
                      .start()\
@@ -118,4 +123,4 @@ if __name__ == "__main__":
                      .option("checkpointLocation",CHECKPOINT_LOCATION)\
                      .start()\
                      .awaitTermination()
-    
+    '''

@@ -48,9 +48,10 @@ services:
     hostname: flink
     networks:
       - main_network
-    image: flink:latest
+    image: kobflink
     ports:
       - "8081:8081"
+      - "9131:9999"
     command: jobmanager
     volumes:
        - ./FlinkScripts:/opt/flink-apps
@@ -60,12 +61,14 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager             
   taskmanager1:
-    image: flink:latest
+    image: kobflink
     container_name: flink_worker1
     hostname: flink_worker1
     depends_on:
       - jobmanager
     command: taskmanager
+    ports:
+      - "9132:9999"
     volumes:
        - ./FlinkScripts:/opt/flink-apps
        - ./DockerFile/Flink:/data
@@ -77,44 +80,62 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: jobmanager
         taskmanager.numberOfTaskSlots: 2      
-  taskmanager2:
-    image: flink:latest
-    container_name: flink_worker2
-    hostname: flink_worker2
-    depends_on:
-      - jobmanager
-    command: taskmanager
+  # taskmanager2:
+  #   image: flink:latest
+  #   container_name: flink_worker2
+  #   hostname: flink_worker2
+  #   depends_on:
+  #     - jobmanager
+  #   command: taskmanager
+  #   volumes:
+  #      - ./FlinkScripts:/opt/flink-apps
+  #      - ./DockerFile/Flink:/data
+  #   networks:
+  #     - main_network
+  #   scale: 1
+  #   environment:
+  #     - |
+  #       FLINK_PROPERTIES=
+  #       jobmanager.rpc.address: jobmanager
+  #       taskmanager.numberOfTaskSlots: 2   
+  # taskmanager3:
+  #   image: flink:latest
+  #   container_name: flink_worker3
+  #   hostname: flink_worker3
+  #   depends_on:
+  #     - jobmanager
+  #   command: taskmanager
+  #   volumes:
+  #      - ./FlinkScripts:/opt/flink-apps
+  #      - ./DockerFile/Flink:/data
+  #   networks:
+  #     - main_network
+  #   scale: 1
+  #   environment:
+  #     - |
+  #       FLINK_PROPERTIES=
+  #       jobmanager.rpc.address: jobmanager
+  #       taskmanager.numberOfTaskSlots: 2   
+  prometheus:
+    image: prom/prometheus:v2.37.1
+    container_name: prometheus
+    ports:
+      - "9090:9090"
     volumes:
-       - ./FlinkScripts:/opt/flink-apps
-       - ./DockerFile/Flink:/data
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/flink.rules.yml:/etc/prometheus/flink.rules.yml
     networks:
       - main_network
-    scale: 1
+  grafana:
+    image: grafana/grafana:8.4.0
     environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2   
-  taskmanager3:
-    image: flink:latest
-    container_name: flink_worker3
-    hostname: flink_worker3
-    depends_on:
-      - jobmanager
-    command: taskmanager
+      - GF_SECURITY_ADMIN_PASSWORD=flink
     volumes:
-       - ./FlinkScripts:/opt/flink-apps
-       - ./DockerFile/Flink:/data
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    ports:
+      - '3000:3000'
     networks:
       - main_network
-    scale: 1
-    environment:
-      - |
-        FLINK_PROPERTIES=
-        jobmanager.rpc.address: jobmanager
-        taskmanager.numberOfTaskSlots: 2   
-  
-
   spark:
     image: kobspark
     container_name: spark

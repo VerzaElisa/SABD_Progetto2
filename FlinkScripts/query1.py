@@ -20,6 +20,7 @@ def query1():
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
         env.set_parallelism(1) 
         env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
+        env.add_jars("file:///opt/flink-apps/flink-metrics-prometheus_2.12-1.7.2.jar")
         env.add_python_file("file:///opt/flink-apps/Utility.py")
         env.get_config().set_latency_tracking_interval(200)
         #creazione della sorgente

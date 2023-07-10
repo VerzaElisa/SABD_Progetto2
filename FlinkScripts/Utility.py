@@ -80,17 +80,17 @@ class MyMapperMeter(MapFunction):
         self.start = time.time()
         self.count = 0
         self.tp = 0.0
+        #self.f=open("/opt/flink-apps/ciao.txt")
 
     def open(self, runtime_context):
         self.meter = runtime_context\
             .get_metrics_group()\
-            .gauge("my_meter", lambda :self.tp)
+            .gauge("my_g", lambda :self.tp*1000)
         self.start = time.time()
-        print('ciao')
 
     def map(self, value: str):
-        #self.meter.mark_event()
-        end = time.time()-self.start
+        end = (time.time()-self.start)
         self.count += 1
         self.tp = self.count/end
+        #self.f.write(str(self.tp)+"\n")
         return value
