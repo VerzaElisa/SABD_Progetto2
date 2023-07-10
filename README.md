@@ -25,6 +25,24 @@ Per avviare il sistema basta eseguire il seguente comando:
 ```
 sh avviosistema.sh
 ```
-Questo permette l'avvio del sistema, in particolare, avvia automaticamente un container NIFI e avvia i processori, vengono avviati di default 3 container worker per flink e un master e un container worker per spark e un master, un container per kafka e un containe per zookeeper.<br>
-Inoltre viene avviato lo script python che inizia a immettere un flusso di tuple, con velocità controllabile, su un topic Kafka.
-per avviare la computazione di Flink
+Questo permette l'avvio del sistema, in particolare,vengono avviati:
+- 1 container per Zookeeper
+- 1 container per Kafka
+- 4 container per Flink (1 master 3 worker)
+- 2 container per Spark (1 master 1 worker)
+- 1 container per Nifi
+Lo script si occupa di scaricare anche tutti i file necessari per la computazione, di creare autonomamente i topic su kafka, di instanziare e avviare i processori di Nifi e di avviare come ultima cosa il producer che permette la simulazione dell'invio delle tuple poco alla volta.<br>
+Per avviare la computazione di Flink bisogna eseguire il comando:
+'''
+sh avvio_processamento -x <Nifi/Not>
+'''
+che permette di instanziare i tre job Flink per elaborare le query, il flag -x indica se l'elaborazione deve includere il preprocessamento o meno di default il preprocessamento é disabilitato<br>
+## Consumer
+Nella cartella Consumer sono inseriti script python per riportare i dati elaborati dalle 3 query su file csv <br>
+Per avviare un consumer bisogna:
+'''
+cd Consumer
+python3 Query*Consumer.py
+'''
+e sostituire * con il numero della query che si vuole avviare.
+
