@@ -20,6 +20,8 @@ def query1():
         env.set_parallelism(1) 
         env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
         env.add_python_file("file:///opt/flink-apps/NifiComputation/Utility.py")
+        env.get_config().set_latency_tracking_interval(200)
+
         #creazione della sorgente
         source = KafkaSource.builder() \
             .set_bootstrap_servers("kafka:29092") \
