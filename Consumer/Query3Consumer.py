@@ -10,8 +10,8 @@ c.subscribe(['resultQuery3-30minutes','resultQuery3-1hour','resultQuery3-1day'])
 HEADER="TS,Mercato,25percentile,50percentile,75percentile\n"
 def main():
     file1=open("../Result/Query3/ResultQuery3-30minutes.csv","w")
-    file2=open("../Result/Query3/ResultQuery3-1days.csv","w")
-    file3=open("../Result/Query3/ResultQuery3-1hour.csv","w")
+    file2=open("../Result/Query3/ResultQuery3-1hour.csv","w")
+    file3=open("../Result/Query3/ResultQuery3-1days.csv","w")
     file1.write(HEADER)
     file2.write(HEADER)
     file3.write(HEADER)
@@ -33,7 +33,8 @@ def main():
             file2.write(data+"\n")
             file2.flush()
             continue
-        if msg.topic()=="resultQuery3-1Day":
+        if msg.topic()=="resultQuery3-1day":
+            print(data)
             file3.write(data+"\n")
             file3.flush()
             continue

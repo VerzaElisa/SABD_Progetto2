@@ -33,9 +33,6 @@ then
 else
      echo "Download file sql"
      wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/1.17.1/flink-sql-connector-kafka-1.17.1.jar
-     wget https://repo.maven.apache.org/maven2/org/apache/flink/flink-metrics-prometheus_2.12/1.7.2/flink-metrics-prometheus_2.12-1.7.2.jar
-     echo "Prometeus file jar"
-     wget  
 fi
 cd ..
 cd ./DockerFile/SparkBITNAMI/
@@ -52,7 +49,7 @@ docker exec -it flink_worker3 sh /data/setup.sh
 echo "inizio setup Kafka Topic"
 bash avvio_topic.sh
 
-# echo "inizio setup NIFI"
-# cd ScriptSetUpNIFI
-# #bash LogIn.sh
-# cd ..
+echo "inizio setup NIFI"
+cd ScriptSetUpNIFI
+bash LogIn.sh
+cd ..

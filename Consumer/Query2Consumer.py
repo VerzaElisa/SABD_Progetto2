@@ -1,6 +1,6 @@
 from confluent_kafka import Consumer
 import time as Time
-HEADER="TS,ID,Delta1\n"
+HEADER="ID,Delta1,TS\n"
 ################
 c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumerQuery2','auto.offset.reset':'latest'})
 print('Kafka Consumer has been initiated...')
@@ -25,7 +25,6 @@ def main():
             continue
         data=msg.value().decode('utf-8')
         start=Time.time()
-        print(data)
         if msg.topic()=="resultQuery2-30minutes":
             file1.write(data+"\n")
             file1.flush()
