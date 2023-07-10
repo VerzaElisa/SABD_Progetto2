@@ -55,12 +55,12 @@ if __name__ == "__main__":
                     df3.Value,
                     to_timestamp(df3.timestamp,"dd-MM-yyyy HH:mm:ss.SSS").alias("my_timestamp")
                     ).cache() 
-    #Inizio Query1-finestra 30 minutes              
+    #Inizio Query1-finestra 1 ora              
     tumblingWindows30minutes = df3.where(df3.SecType=="E")\
                         .filter(df3.ID.startswith('G'))\
                         .filter(df3.ID.endswith('FR'))\
                         .withWatermark("my_timestamp","10 minutes")\
-                        .groupBy("ID",window("my_timestamp", "30 minutes"))\
+                        .groupBy("ID",window("my_timestamp", "1 hour"))\
                         .agg({"value":"count","Value":"mean"})
     tumblingWindows30minutes=tumblingWindows30minutes.select(
                                 (tumblingWindows30minutes.window.start).alias("ts"),
@@ -77,7 +77,7 @@ if __name__ == "__main__":
     tumblingWindows30minutes.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \
-                     .option("topic", "spark-30minutes")\
+                     .option("topic", "spark-1hour")\
                      .option("checkpointLocation",CHECKPOINT_LOCATION)\
                      .start()\
                      .awaitTermination()
