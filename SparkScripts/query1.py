@@ -56,25 +56,20 @@ if __name__ == "__main__":
                     to_timestamp(df3.timestamp,"dd-MM-yyyy HH:mm:ss.SSS").alias("my_timestamp")
                     ).cache() 
     #Inizio Query1-finestra 1 ora              
-    tumblingWindows30minutes = df3.where(df3.SecType=="E")\
+    tumblingWindows1hour = df3.where(df3.SecType=="E")\
                         .filter(df3.ID.startswith('G'))\
                         .filter(df3.ID.endswith('FR'))\
                         .withWatermark("my_timestamp","10 minutes")\
                         .groupBy("ID",window("my_timestamp", "1 hour"))\
                         .agg({"value":"count","Value":"mean"})
-    tumblingWindows30minutes=tumblingWindows30minutes.select(
-                                (tumblingWindows30minutes.window.start).alias("ts"),
-                                tumblingWindows30minutes.ID,
-                                tumblingWindows30minutes["avg(Value)"].alias("Media"),
-                                tumblingWindows30minutes["count(Value)"].alias("Count"),
+    tumblingWindows1hour=tumblingWindows1hour.select(
+                                (tumblingWindows1hour.window.start).alias("ts"),
+                                tumblingWindows1hour.ID,
+                                tumblingWindows1hour["avg(Value)"].alias("Media"),
+                                tumblingWindows1hour["count(Value)"].alias("Count"),
                         )
-    tumblingWindows30minutes = tumblingWindows30minutes.select([col(c).cast("string") for c in tumblingWindows30minutes.columns])
-    #tumblingWindows = tumblingWindows.select(concat(concat(tumblingWindows.ID,lit(",")),tumblingWindows.window).alias("value"))
-    # tumblingWindows30minutes.writeStream \
-    #             .format("console") \
-    #             .start()\
-    #             .awaitTermination()
-    tumblingWindows30minutes.writeStream \
+    tumblingWindows1hour = tumblingWindows1hour.select([col(c).cast("string") for c in tumblingWindows1hour.columns])
+    tumblingWindows1hour.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \
                      .option("topic", "spark-1hour")\
@@ -95,11 +90,6 @@ if __name__ == "__main__":
                                 tumblingWindows1Days["count(Value)"].alias("Count"),
                         )
     tumblingWindows1Days = tumblingWindows1Days.select([col(c).cast("string") for c in tumblingWindows1Days.columns])
-    #tumblingWindows = tumblingWindows.select(concat(concat(tumblingWindows.ID,lit(",")),tumblingWindows.window).alias("value"))
-    # tumblingWindows30minutes.writeStream \
-    #             .format("console") \
-    #             .start()\
-    #             .awaitTermination()
     tumblingWindows1Days.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \
@@ -121,11 +111,6 @@ if __name__ == "__main__":
                                 tumblingWindowsGlobal["count(Value)"].alias("Count"),
                         )
     tumblingWindowsGlobal = tumblingWindowsGlobal.select([col(c).cast("string") for c in tumblingWindowsGlobal.columns])
-    #tumblingWindows = tumblingWindows.select(concat(concat(tumblingWindows.ID,lit(",")),tumblingWindows.window).alias("value"))
-    # tumblingWindows30minutes.writeStream \
-    #             .format("console") \
-    #             .start()\
-    #             .awaitTermination()
     tumblingWindowsGlobal.writeStream \
                      .format("kafka") \
                      .option("kafka.bootstrap.servers", "kafka:29092") \

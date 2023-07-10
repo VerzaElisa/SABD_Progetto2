@@ -4,7 +4,7 @@ from typing import Iterable
 from operator import itemgetter
 from pyflink.datastream.window import TimeWindow
 from pyflink.common.watermark_strategy import TimestampAssigner
-from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction
+from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction, MapFunction
 #libreria per il quantile dinamico
 from psquare.psquare import PSquare
 
@@ -73,3 +73,24 @@ class queryADDTimestamp(ProcessWindowFunction):
         for e in elements:
             elements_out.append([context.window().start]+list(e))
         return elements_out
+    
+class MyMapperMeter(MapFunction):
+    def __init__(self):
+        self.meter = None
+        self.start = time.time()
+        self.count = 0
+        self.tp = 0.0
+
+    def open(self, runtime_context):
+        self.meter = runtime_context\
+            .get_metrics_group()\
+            .gauge("my_meter", lambda :self.tp)
+        self.start = time.time()
+        print('ciao')
+
+    def map(self, value: str):
+        #self.meter.mark_event()
+        end = time.time()-self.start
+        self.count += 1
+        self.tp = self.count/end
+        return value
