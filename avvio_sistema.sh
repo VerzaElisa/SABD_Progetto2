@@ -40,6 +40,7 @@ docker build -t kobspark .
 cd ../..
 docker compose build
 docker compose up -d
+
 echo "inizio setup Flink"
 docker exec -it flink sh /data/setup.sh
 docker exec -it flink_worker1 sh /data/setup.sh
@@ -53,3 +54,4 @@ echo "inizio setup NIFI"
 cd ScriptSetUpNIFI
 bash LogIn.sh
 cd ..
+python3 producer.py

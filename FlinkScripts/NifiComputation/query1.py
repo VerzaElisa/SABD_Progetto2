@@ -35,7 +35,7 @@ def query1():
               .with_timestamp_assigner(OurTimestampAssigner())
         #Creo i KafkaSink per andare a scrivere su 3 topic differenti i risultati delle query
         record_serializer1 = KafkaRecordSerializationSchema.builder() \
-            .set_topic("resultQuery1-30minutes") \
+            .set_topic("resultQuery1-1hour") \
             .set_value_serialization_schema(SimpleStringSchema()) \
             .build()
         sink1 = KafkaSink.builder() \
@@ -68,7 +68,7 @@ def query1():
             .map(func=lambda f:(f[0]+"|"+f[4]+"|"+f[3].split(sep=":")[0],(1,float(f[2]))))\
             .key_by(key_selector=lambda f:f[0])
         #separo per le tre finestre temporali
-        ds1 = ds.window(TumblingEventTimeWindows.of(Time.minutes(30)))\
+        ds1 = ds.window(TumblingEventTimeWindows.of(Time.minutes(60)))\
             .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
             .sink_to(sink1)

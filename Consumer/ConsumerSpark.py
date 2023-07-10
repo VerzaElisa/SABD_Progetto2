@@ -6,11 +6,11 @@ c=Consumer({'bootstrap.servers':'localhost:9092','group.id':'python-consumerQuer
 print('Kafka Consumer has been initiated...')
 
 print('Available topics to consume: ', c.list_topics().topics)
-c.subscribe(['spark-Global','spark-30minutes','spark-1day'])
+c.subscribe(['spark-Global','spark-1hour','spark-1day'])
 ################
 HEADER="TS,ID,value,Count\n"
 def main():
-    file1=open("../Result/Spark/ResultQuery1-30minutes.csv","w")
+    file1=open("../Result/Spark/resultQuery1-1hour.csv","w")
     file2=open("../Result/Spark/ResultQuery1-1days.csv","w")
     file3=open("../Result/Spark/ResultQuery1-global.csv","w")
     file1.write(HEADER)
@@ -26,7 +26,7 @@ def main():
             continue
         data=msg.value().decode('utf-8')
         start=Time.time()
-        if msg.topic()=="spark-30minutes":
+        if msg.topic()=="spark-1hour":
             file1.write(data+"\n")
             file1.flush()
             continue
