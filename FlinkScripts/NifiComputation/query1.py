@@ -1,7 +1,7 @@
 import json
 import os
 import time, datetime
-from Utility import OurTimestampAssigner, toString ,queryADDTimestamp, csvToList, ReduceFunctionQuery1
+from Utility import OurTimestampAssigner, toString ,queryADDTimestamp, csvToList, ReduceFunctionQuery1 ,MyMapperMeter
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -19,6 +19,7 @@ def query1():
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
         env.set_parallelism(1) 
         env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
+        env.add_jars("file:///opt/flink-apps/flink-metrics-prometheus_2.12-1.7.2.jar")
         env.add_python_file("file:///opt/flink-apps/NifiComputation/Utility.py")
         env.get_config().set_latency_tracking_interval(200)
 
@@ -71,14 +72,17 @@ def query1():
         ds1 = ds.window(TumblingEventTimeWindows.of(Time.minutes(60)))\
             .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
+            .map(MyMapperMeter(), output_type=Types.STRING())\
             .sink_to(sink1)
         ds2 = ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
             .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
+            .map(MyMapperMeter(), output_type=Types.STRING())\
             .sink_to(sink2)
         ds3 = ds.window(TumblingEventTimeWindows.of(Time.days(6)))\
             .reduce(ReduceFunctionQuery1(),queryADDTimestamp())\
             .map(func=lambda f:toString([f[0]]+[f[1].split(sep="|")[0]]+[f[2][1]/f[2][0],f[2][0]]),output_type=Types.STRING())\
+            .map(MyMapperMeter(), output_type=Types.STRING())\
             .sink_to(sink3)
         env.execute('query1')
         env.close()

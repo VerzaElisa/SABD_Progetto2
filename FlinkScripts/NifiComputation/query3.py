@@ -3,7 +3,7 @@ import os
 import time, datetime
 from typing import Iterable
 from pyflink.datastream.functions import ProcessWindowFunction, ReduceFunction
-from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString, csvToList ,CountWindowProcessFunctionPerc
+from Utility import OurTimestampAssigner, CountWindowProcessFunction, toString, csvToList ,CountWindowProcessFunctionPerc, MyMapperMeter
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration ,Row
 from pyflink.common.watermark_strategy import TimestampAssigner
 from pyflink.datastream import StreamExecutionEnvironment
@@ -30,6 +30,7 @@ def query3():
         #env.set_stream_time_characteristic(TimeCharacteristic.EventTime)
         env.set_parallelism(1) 
         env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
+        env.add_jars("file:///opt/flink-apps/flink-metrics-prometheus_2.12-1.7.2.jar")
         env.add_python_file("file:///opt/flink-apps/NifiComputation/Utility.py")
         env.get_config().set_latency_tracking_interval(200)
 
@@ -83,6 +84,7 @@ def query3():
                 .reduce(ReduceFunctionPerc())\
                 .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
                 .map(lambda f:toString(f),output_type=Types.STRING())\
+                .map(MyMapperMeter(), output_type=Types.STRING())\
                 .sink_to(sink1)
         ds2= ds.window(TumblingEventTimeWindows.of(Time.hours(1)))\
                 .process(CountWindowProcessFunctionPerc())\
@@ -91,6 +93,7 @@ def query3():
                 .reduce(ReduceFunctionPerc())\
                 .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
                 .map(lambda f:toString(f),output_type=Types.STRING())\
+                .map(MyMapperMeter(), output_type=Types.STRING())\
                 .sink_to(sink2)
         ds3= ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
                 .process(CountWindowProcessFunctionPerc())\
@@ -99,6 +102,7 @@ def query3():
                 .reduce(ReduceFunctionPerc())\
                 .map(lambda f:[f[2],f[0].split(sep=".")[1],f[7],f[8],f[9]])\
                 .map(lambda f:toString(f),output_type=Types.STRING())\
+                .map(MyMapperMeter(), output_type=Types.STRING())\
                 .sink_to(sink3)
         env.execute('query3')
         env.close()

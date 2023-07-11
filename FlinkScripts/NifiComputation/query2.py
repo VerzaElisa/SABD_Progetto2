@@ -3,7 +3,7 @@ import os
 import time, datetime
 from typing import Iterable
 from operator import itemgetter
-from Utility import OurTimestampAssigner, CountWindowProcessFunction, Chart, csvToList, toString
+from Utility import OurTimestampAssigner, CountWindowProcessFunction, Chart, csvToList, toString , MyMapperMeter
 
 
 from pyflink.common import SimpleStringSchema,WatermarkStrategy,Time ,Duration
@@ -28,6 +28,7 @@ def query2():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(1)
     env.add_jars("file:///opt/flink-apps/flink-sql-connector-kafka-1.17.1.jar")
+    env.add_jars("file:///opt/flink-apps/flink-metrics-prometheus_2.12-1.7.2.jar")
     env.add_python_file("file:///opt/flink-apps/NifiComputation/Utility.py")
     env.get_config().set_latency_tracking_interval(200)
 
@@ -76,6 +77,7 @@ def query2():
           .window_all(TumblingEventTimeWindows.of(Time.minutes(30)))\
           .process(Chart())\
           .map(lambda f:toString(f),output_type=Types.STRING())\
+          .map(MyMapperMeter(), output_type=Types.STRING())\
           .sink_to(sink1)
     
     ds2=ds.window(TumblingEventTimeWindows.of(Time.hours(1)))\
@@ -83,12 +85,14 @@ def query2():
         .window_all(TumblingEventTimeWindows.of(Time.hours(1)))\
         .process(Chart())\
         .map(lambda f:toString(f),output_type=Types.STRING())\
+        .map(MyMapperMeter(), output_type=Types.STRING())\
         .sink_to(sink2)
     ds3=ds.window(TumblingEventTimeWindows.of(Time.days(1)))\
         .process(CountWindowProcessFunction())\
         .window_all(TumblingEventTimeWindows.of(Time.days(1)))\
         .process(Chart())\
         .map(lambda f:toString(f),output_type=Types.STRING())\
+        .map(MyMapperMeter(), output_type=Types.STRING())\
         .sink_to(sink3)
     env.execute('query2')
     env.close()

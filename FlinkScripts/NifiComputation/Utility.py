@@ -16,8 +16,6 @@ def toString(f):
         s=s+str(f[i])+","
     s=s+str(f[len(f)-1])
     return s
-
-
 def csvToList(f):
     x=f.split(sep=",")
     return x
@@ -73,3 +71,21 @@ class queryADDTimestamp(ProcessWindowFunction):
         for e in elements:
             elements_out.append([context.window().start]+list(e))
         return elements_out
+class MyMapperMeter(MapFunction):
+    def __init__(self):
+        self.meter = None
+        self.start = time.time()
+        self.count = 0
+        self.tp = 0.0
+
+    def open(self, runtime_context):
+        self.meter = runtime_context\
+            .get_metrics_group()\
+            .gauge("my_g", lambda :self.tp*1000)
+        self.start = time.time()
+
+    def map(self, value: str):
+        end = (time.time()-self.start)
+        self.count += 1
+        self.tp = self.count/end
+        return value
