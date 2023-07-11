@@ -21,7 +21,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -379,7 +378,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "flink_taskmanager_job_task_operator_my_g{}/1000000",
+          "expr": "flink_taskmanager_job_task_operator_my_Throughput/100000",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -431,7 +430,7 @@
         "y": 22
       },
       "hiddenSeries": false,
-      "id": 30,
+      "id": 32,
       "legend": {
         "avg": false,
         "current": false,
@@ -464,7 +463,7 @@
             "uid": "PBFA97CFB590B2093"
           },
           "exemplar": true,
-          "expr": "flink_taskmanager_job_latency_source_id_operator_id_operator_subtask_index_latency{job_id=\"799dcd4bb4cbf47696130043eca4ef92\",quantile=\"0.5\"}",
+          "expr": "flink_taskmanager_job_task_operator_my_latency",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -510,10 +509,95 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "hiddenSeries": false,
+      "id": 30,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "8.4.0",
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "exemplar": true,
+          "expr": "flink_taskmanager_job_latency_source_id_operator_id_operator_subtask_index_latency{quantile=\"0.5\"}",
+          "format": "time_series",
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{job_name}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeRegions": [],
+      "title": "Latency mediana",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "mode": "time",
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 32
+        "y": 42
       },
       "hiddenSeries": false,
       "id": 28,
@@ -599,7 +683,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 32
+        "y": 42
       },
       "hiddenSeries": false,
       "id": 29,
@@ -682,8 +766,8 @@
     "list": []
   },
   "time": {
-    "from": "2023-07-11T06:06:50.939Z",
-    "to": "2023-07-11T07:10:36.049Z"
+    "from": "now-15m",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
