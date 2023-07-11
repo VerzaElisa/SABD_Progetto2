@@ -12,3 +12,5 @@ apache-flink*.tar.gz
 /ScriptSetUpNIFI/Credenziali.txt
 /FlinkScripts/__pycache__
 /SparkScripts/CHECKPOINT
+/SparkScripts/CHECKPOINT1
+/SparkScripts/CHECKPOINT2
