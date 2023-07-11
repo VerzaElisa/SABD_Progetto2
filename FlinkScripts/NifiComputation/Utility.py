@@ -4,7 +4,7 @@ from typing import Iterable
 from operator import itemgetter
 from pyflink.datastream.window import TimeWindow
 from pyflink.common.watermark_strategy import TimestampAssigner
-from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction
+from pyflink.datastream.functions import ReduceFunction ,ProcessWindowFunction, ProcessAllWindowFunction, MapFunction
 #libreria per il quantile dinamico
 from psquare.psquare import PSquare
 
@@ -77,15 +77,20 @@ class MyMapperMeter(MapFunction):
         self.start = time.time()
         self.count = 0
         self.tp = 0.0
+        self.latency = 0.0
 
     def open(self, runtime_context):
         self.meter = runtime_context\
             .get_metrics_group()\
-            .gauge("my_g", lambda :self.tp*1000000)
+            .gauge("my_Throughput", lambda :self.tp*1000000)
+        self.meter = runtime_context\
+            .get_metrics_group()\
+            .gauge("my_latency", lambda :self.latency)
         self.start = time.time()
 
     def map(self, value: str):
         end = (time.time()-self.start)
         self.count += 1
         self.tp = self.count/end
+        self.latency = (end*1000)/self.count
         return value
