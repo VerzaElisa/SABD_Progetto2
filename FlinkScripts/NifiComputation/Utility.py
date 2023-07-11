@@ -81,7 +81,7 @@ class MyMapperMeter(MapFunction):
     def open(self, runtime_context):
         self.meter = runtime_context\
             .get_metrics_group()\
-            .gauge("my_g", lambda :self.tp*1000)
+            .gauge("my_g", lambda :self.tp*1000000)
         self.start = time.time()
 
     def map(self, value: str):
