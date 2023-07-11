@@ -55,6 +55,7 @@ if __name__ == "__main__":
                     df3.Value,
                     to_timestamp(df3.timestamp,"dd-MM-yyyy HH:mm:ss.SSS").alias("my_timestamp")
                     ) 
+
     #Inizio Query1-finestra 1 ora              
     tumblingWindows1hour = df3.where(df3.SecType=="E")\
                         .filter(df3.ID.startswith('G'))\
@@ -68,19 +69,15 @@ if __name__ == "__main__":
                                 tumblingWindows1hour["avg(Value)"].alias("Media"),
                                 tumblingWindows1hour["count(Value)"].alias("Count"),
                         )
-    tumblingWindows1hour = tumblingWindows1hour.select([col(c).cast("string") for c in tumblingWindows1hour.columns])
+    tumblingWindows1hour = tumblingWindows1hour.select(concat(tumblingWindows1hour.ts, lit(","), tumblingWindows1hour.ID, lit(","), tumblingWindows1hour.Media, lit(","), tumblingWindows1hour.Count).alias("value").cast("string"))
     tumblingWindows1hour.writeStream\
-                     .format("console")\
-                     .start()\
-                     .awaitTermination()
-    '''
-    tumblingWindows1hour.writeStream\
-                     .format("kafka")\
-                     .option("kafka.bootstrap.servers", "kafka:29092")\
-                     .option("topic", "spark-1hour")\
-                     .option("checkpointLocation",CHECKPOINT_LOCATION)\
-                     .start()\
-                     .awaitTermination()
+                        .format("kafka")\
+                        .option("kafka.bootstrap.servers", "kafka:29092")\
+                        .option("topic", "resultQuery1-1hour")\
+                        .option("checkpointLocation",CHECKPOINT_LOCATION)\
+                        .start()\
+                        .awaitTermination()
+    
     #Inizio Query1-finestra 1 Days              
     tumblingWindows1Days = df3.where(df3.SecType=="E")\
                         .filter(df3.ID.startswith('G'))\
@@ -94,14 +91,15 @@ if __name__ == "__main__":
                                 tumblingWindows1Days["avg(Value)"].alias("Media"),
                                 tumblingWindows1Days["count(Value)"].alias("Count"),
                         )
-    tumblingWindows1Days = tumblingWindows1Days.select([col(c).cast("string") for c in tumblingWindows1Days.columns])
-    tumblingWindows1Days.writeStream \
-                     .format("kafka") \
-                     .option("kafka.bootstrap.servers", "kafka:29092") \
-                     .option("topic", "spark-1day")\
-                     .option("checkpointLocation",CHECKPOINT_LOCATION)\
-                     .start()\
-                     .awaitTermination()
+    tumblingWindows1Days = tumblingWindows1Days.select(concat(tumblingWindows1Days.ts, lit(","), tumblingWindows1Days.ID, lit(","), tumblingWindows1Days.Media, lit(","), tumblingWindows1Days.Count).alias("value").cast("string"))
+    tumblingWindows1Days.writeStream\
+                        .format("kafka")\
+                        .option("kafka.bootstrap.servers", "kafka:29092")\
+                        .option("topic", "resultQuery1-1Days")\
+                        .option("checkpointLocation",CHECKPOINT_LOCATION)\
+                        .start()\
+                        .awaitTermination()
+    
     #Inizio Query1-finestra Global              
     tumblingWindowsGlobal = df3.where(df3.SecType=="E")\
                         .filter(df3.ID.startswith('G'))\
@@ -115,12 +113,11 @@ if __name__ == "__main__":
                                 tumblingWindowsGlobal["avg(Value)"].alias("Media"),
                                 tumblingWindowsGlobal["count(Value)"].alias("Count"),
                         )
-    tumblingWindowsGlobal = tumblingWindowsGlobal.select([col(c).cast("string") for c in tumblingWindowsGlobal.columns])
-    tumblingWindowsGlobal.writeStream \
-                     .format("kafka") \
-                     .option("kafka.bootstrap.servers", "kafka:29092") \
-                     .option("topic", "spark-Global")\
-                     .option("checkpointLocation",CHECKPOINT_LOCATION)\
-                     .start()\
-                     .awaitTermination()
-    '''
+    tumblingWindowsGlobal = tumblingWindowsGlobal.select(concat(tumblingWindowsGlobal.ts, lit(","), tumblingWindowsGlobal.ID, lit(","), tumblingWindowsGlobal.Media, lit(","), tumblingWindowsGlobal.Count).alias("value").cast("string"))
+    tumblingWindowsGlobal.writeStream\
+                        .format("kafka")\
+                        .option("kafka.bootstrap.servers", "kafka:29092")\
+                        .option("topic", "resultQuery1-Global")\
+                        .option("checkpointLocation",CHECKPOINT_LOCATION)\
+                        .start()\
+                        .awaitTermination()
